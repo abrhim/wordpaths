@@ -15,9 +15,9 @@ export const action: ActionFunction = async ({ request }) => {
     .split(",");
   console.log(formData);
   return evaluateGameState({
-    nextWord,
-    endWord,
-    startWord,
+    nextWord: nextWord.toLowerCase(),
+    endWord: endWord.toLowerCase(),
+    startWord: startWord.toLowerCase(),
     path: path ? path : [],
   });
 };
@@ -96,6 +96,7 @@ export default function Daily() {
             type="text"
             style={{
               borderColor: actionData?.errors?.nextWord ? "red" : "",
+              textTransform: "uppercase",
             }}
             maxLength={4}
           />
