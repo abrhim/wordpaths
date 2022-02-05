@@ -1,0 +1,13 @@
+#PathTable {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+}
+
+#PathTableForm input {
+  width: 60px;
+  margin: 5px;
+}
+.invalid {
+  border-color: red;
+}
