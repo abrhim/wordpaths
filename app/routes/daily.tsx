@@ -15,9 +15,9 @@ export const action: ActionFunction = async ({ request }) => {
     .split(",");
   console.log(formData);
   return evaluateGameState({
-    nextWord: nextWord.toLowerCase(),
-    endWord: endWord.toLowerCase(),
-    startWord: startWord.toLowerCase(),
+    nextWord: nextWord.toUpperCase(),
+    endWord: endWord.toUpperCase(),
+    startWord: startWord.toUpperCase(),
     path: path ? path : [],
   });
 };
@@ -37,7 +37,9 @@ export default function Daily() {
     if (actionData?.valid) {
       if (actionData.finished) setFinished(true);
       try {
-        const pathsFromLocalStorage = addNextWord(actionData.nextWord);
+        const pathsFromLocalStorage = addNextWord(
+          actionData.nextWord.toUpperCase()
+        );
         setPath(pathsFromLocalStorage);
       } catch (e) {
         console.log(e);
@@ -47,8 +49,8 @@ export default function Daily() {
 
   const initializeGame = (): void => {
     //   set starting and ending words
-    const startWord = "hell";
-    const endWord = "milk";
+    const startWord = "hell".toUpperCase();
+    const endWord = "milk".toUpperCase();
     setTerminus(startWord, endWord);
   };
 
