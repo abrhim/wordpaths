@@ -9,7 +9,8 @@ export default function Roadmap() {
           <li>
             Start word on top, end word on bottom, path below start word, and
             next word is on bottom directly above end word. Path is pinned to
-            the top, input is pinned to the bottom. (rick)
+            the top, input is pinned to the bottom. Have visual cue that a
+            letter needs to be changed.(rick)
           </li>
           <li>Make next word's input box 4 boxes, one for each letter.</li>
         </ul>

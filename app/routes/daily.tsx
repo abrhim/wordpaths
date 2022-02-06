@@ -6,7 +6,12 @@ import {
   useTransition,
   useLoaderData,
 } from "remix";
-import { addNextWord, getGameState, setTerminus } from "~/utils/localStorage";
+import {
+  addNextWord,
+  clearGame,
+  getGameState,
+  setTerminus,
+} from "~/utils/localStorage";
 import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 
 // Note the "action" export name, this will handle our form POST
@@ -62,6 +67,10 @@ export default function Daily() {
     if (initialData.startWord && initialData.endWord) {
       const startWord = initialData.startWord.toUpperCase();
       const endWord = initialData.endWord.toUpperCase();
+      const gamestate = getGameState();
+      if (gamestate?.startWord && gamestate?.startWord !== startWord) {
+        clearGame();
+      }
       setTerminus(startWord, endWord);
     }
   };

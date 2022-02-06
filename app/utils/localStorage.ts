@@ -25,3 +25,7 @@ export const setTerminus = (startWord: string, endWord: string): void => {
     })
   );
 };
+
+export const clearGame = () => {
+  localStorage.setItem("wordpaths", JSON.stringify({}));
+};
