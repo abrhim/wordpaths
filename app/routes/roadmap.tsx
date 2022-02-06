@@ -18,6 +18,10 @@ export default function Roadmap() {
           for each user:
         </li>
         <ul>
+          <li>
+            Upon finishing challenge present how you did compared to other
+            users. (melissa)
+          </li>
           <li>Total Games Played</li>
           <li>Games Played Consecutively (streak)</li>
           <li>
@@ -44,8 +48,9 @@ export default function Roadmap() {
         </li>
         <li>
           Share your score: create an image with the day's challenge words along
-          with how many are in your path.
+          with how many are in your path. (rick)
         </li>
+        <li>Make word input 4 individual boxes instead of 1 (rick)</li>
       </ul>
     </div>
   );
