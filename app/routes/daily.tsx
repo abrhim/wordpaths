@@ -141,7 +141,6 @@ export default function Daily() {
             />
             <br />
             <button
-              hidden={!finished}
               type="button"
               onClick={() => {
                 localStorage.setItem("wordpaths", "");
