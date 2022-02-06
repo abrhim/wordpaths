@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
-import { ActionFunction, useActionData, Form, useTransition } from "remix";
+import {
+  ActionFunction,
+  useActionData,
+  Form,
+  useTransition,
+  useLoaderData,
+} from "remix";
 import { addNextWord, getGameState, setTerminus } from "~/utils/localStorage";
-import { evaluateGameState } from "~/utils/utils";
+import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 
 // Note the "action" export name, this will handle our form POST
 export const action: ActionFunction = async ({ request }) => {
@@ -22,10 +28,15 @@ export const action: ActionFunction = async ({ request }) => {
   });
 };
 
+export const loader = async () => {
+  return await getDailyChallenge();
+};
+
 export default function Daily() {
   // when the form is being processed on the server, this returns different
   // transition states to help us build pending and optimistic UI.
   const transition = useTransition();
+  const initialData = useLoaderData();
   const actionData = useActionData();
   const [path, setPath] = useState<string[]>([]);
   const [endWord, setEndWord] = useState<string>("");
@@ -33,7 +44,6 @@ export default function Daily() {
   const [finished, setFinished] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(actionData);
     if (actionData?.valid) {
       if (actionData.finished) setFinished(true);
       try {
@@ -49,9 +59,11 @@ export default function Daily() {
 
   const initializeGame = (): void => {
     //   set starting and ending words
-    const startWord = "hell".toUpperCase();
-    const endWord = "milk".toUpperCase();
-    setTerminus(startWord, endWord);
+    if (initialData.startWord && initialData.endWord) {
+      const startWord = initialData.startWord.toUpperCase();
+      const endWord = initialData.endWord.toUpperCase();
+      setTerminus(startWord, endWord);
+    }
   };
 
   useEffect(() => {
@@ -68,7 +80,14 @@ export default function Daily() {
     }
   }, []);
 
-  console.log(finished);
+  if (initialData.error) {
+    return (
+      <div>
+        {" "}
+        <h2>{initialData.error}</h2>
+      </div>
+    );
+  }
 
   return (
     <div>
