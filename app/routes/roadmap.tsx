@@ -3,11 +3,22 @@ export default function Roadmap() {
     <div>
       <h2>Road map:</h2>
       <ul>
+        <li>Make the ui dope:</li>
+        <ul>
+          <li>Dark mode</li>
+          <li>
+            Start word on top, end word on bottom, path below start word, and
+            next word is on bottom directly above end word. Path is pinned to
+            the top, input is pinned to the bottom. (rick)
+          </li>
+          <li>Make next word's input box 4 boxes, one for each letter.</li>
+        </ul>
         <li>
           Add a secret word that isn't advertised that is similar in subject to
           the starting and ending word. IE if starting word is <code>soap</code>{" "}
           and ending word is <code>dirt</code> a good secret word would be{" "}
-          <code>bath</code>. After user finds the secret word display a badge.
+          <code>bath</code>. After user finds the secret word display an
+          achievement.
         </li>
         <li>
           Display that challenge's shortest path, perhaps after they finished
@@ -34,10 +45,7 @@ export default function Roadmap() {
           Maintain statistics on most popular paths for each challenge. This
           *may* be interesting to look at in the future and display.
         </li>
-        <li>
-          Make the ui dope. Reference wordle's design: dark mode, intuitive,
-          ease of use, etc.
-        </li>
+
         <li>
           Tutorial: put instructions into a modal that appears when first
           opening the app and is closable.{" "}
