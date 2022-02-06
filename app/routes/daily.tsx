@@ -147,18 +147,16 @@ export default function Daily() {
         <p>Welcome to Word Paths 👋</p>
         <p>
           The goal of the game is to find a path from the starting word to the
-          ending word using words that differ by one letter.
+          ending word. All words in the path must be 4 letters long, a word in
+          the scrabble dictionary, not the previous word, and only be one letter
+          different than the previous word.
         </p>
         <p>
           If the starting word is <code>DONE</code> and the ending word is{" "}
           <code>CONS</code>, a valid path would be <code>DONE</code> -{">"}{" "}
           <code>CONE</code> -{">"} <code>CONS</code>.{" "}
         </p>
-        <p>
-          All words in the path must be 4 letters long, a word in the scrabble
-          dictionary, not be the previous word, and only be one letter different
-          than the previous word. Have fun 😉
-        </p>
+
         <p>Come back every day for a new challenge 😀 </p>
       </div>
     </div>
