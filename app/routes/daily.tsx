@@ -102,6 +102,8 @@ export default function Daily() {
             : null
           : null}
 
+        {actionData?.finished ? <div>Path length: {path.length}</div> : null}
+
         <Form method="post" style={{ border: "none" }}>
           <fieldset
             style={{ border: "none" }}
