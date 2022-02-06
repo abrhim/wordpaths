@@ -157,6 +157,7 @@ export default function Daily() {
           previous word, and only be one letter different than the previous
           word. Have fun 😉
         </p>
+        <p>Come back every day for a new challenge 😀 </p>
       </div>
     </div>
   );
