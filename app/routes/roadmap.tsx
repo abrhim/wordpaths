@@ -7,7 +7,7 @@ export default function Roadmap() {
           Add a secret word that isn't advertised that is similar in subject to
           the starting and ending word. IE if starting word is <code>soap</code>{" "}
           and ending word is <code>dirt</code> a good secret word would be{" "}
-          <code>bath</code>
+          <code>bath</code>. After user finds the secret word display a badge.
         </li>
         <li>
           Display that challenge's shortest path, perhaps after they finished
