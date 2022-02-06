@@ -42,6 +42,10 @@ export default function Roadmap() {
           Tutorial: put instructions into a modal that appears when first
           opening the app and is closable.{" "}
         </li>
+        <li>
+          Share your score: create an image with the day's challenge words along
+          with how many are in your path.
+        </li>
       </ul>
     </div>
   );
