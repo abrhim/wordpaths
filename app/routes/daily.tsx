@@ -152,10 +152,12 @@ export default function Daily() {
         <p>
           If the starting word is <code>DONE</code> and the ending word is{" "}
           <code>CONS</code>, a valid path would be <code>DONE</code> -{">"}{" "}
-          <code>CONE</code> -{">"} <code>CONS</code>. All words in the path must
-          be 4 letters long, a word in the scrabble dictionary, not be the
-          previous word, and only be one letter different than the previous
-          word. Have fun 😉
+          <code>CONE</code> -{">"} <code>CONS</code>.{" "}
+        </p>
+        <p>
+          All words in the path must be 4 letters long, a word in the scrabble
+          dictionary, not be the previous word, and only be one letter different
+          than the previous word. Have fun 😉
         </p>
         <p>Come back every day for a new challenge 😀 </p>
       </div>
