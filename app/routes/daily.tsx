@@ -92,56 +92,83 @@ export default function Daily() {
   return (
     <div>
       <div>
-        <h3 style={{ display: "inline" }}>
-          {startWord} -{">"} {endWord}
-        </h3>
-      </div>
-      {path
-        ? path.length > 0
-          ? path.map((word) => <div key={Math.random()}>{word}</div>)
-          : null
-        : null}
+        <div>
+          <h3 style={{ display: "inline" }}>start: {startWord}</h3>
+          <h3>end: {endWord}</h3>
+        </div>
+        {path
+          ? path.length > 0
+            ? path.map((word) => <div key={Math.random()}>{word}</div>)
+            : null
+          : null}
 
-      <Form method="post" style={{ border: "none" }}>
-        <fieldset
-          style={{ border: "none" }}
-          disabled={transition.state === "submitting"}
-        >
-          <input type="hidden" value={path} name="path" />
-          <input type="hidden" value={startWord} name="startWord" />
-          <input type="hidden" value={endWord} name="endWord" />
-          <h3 hidden={!finished}>Finished!</h3>
-          <input
-            hidden={finished}
-            name="nextWord"
-            type="text"
-            style={{
-              borderColor: actionData?.errors?.nextWord ? "red" : "",
-              textTransform: "uppercase",
-            }}
-            maxLength={4}
-          />
-          <button type="submit" hidden={finished}>
-            {transition.state === "submitting" ? "Submitting..." : "Submit"}
-          </button>
-
-          <br />
-          <button
-            type="button"
-            onClick={() => {
-              localStorage.setItem("wordpaths", "");
-              window.location.reload();
-            }}
+        <Form method="post" style={{ border: "none" }}>
+          <fieldset
+            style={{ border: "none" }}
+            disabled={transition.state === "submitting"}
           >
-            Reset
-          </button>
-        </fieldset>
-      </Form>
+            <input type="hidden" value={path} name="path" />
+            <input type="hidden" value={startWord} name="startWord" />
+            <input type="hidden" value={endWord} name="endWord" />
+            <h3 hidden={!finished}>Finished!</h3>
+            <input
+              hidden={finished}
+              name="nextWord"
+              type="text"
+              style={{
+                borderColor: actionData?.errors?.nextWord ? "red" : "",
+                textTransform: "uppercase",
+              }}
+              maxLength={4}
+            />
+            <button type="submit" hidden={finished}>
+              {transition.state === "submitting" ? "Submitting..." : "Submit"}
+            </button>
+            <ValidationMessage
+              error={actionData?.error}
+              isSubmitting={transition.state === "submitting"}
+            />
+            <br />
+            <button
+              hidden={!finished}
+              type="button"
+              onClick={() => {
+                localStorage.setItem("wordpaths", "");
+                window.location.reload();
+              }}
+            >
+              Reset
+            </button>
+          </fieldset>
+        </Form>
+      </div>
+      <div>
+        <h3>Instructions: </h3>
+        <p>Welcome to Word Paths 👋</p>
+        <p>
+          The goal of the game is to find a path from the starting word to the
+          ending word using words that differ by one letter.
+        </p>
+        <p>
+          If the starting word is <code>DONE</code> and the ending word is{" "}
+          <code>CONS</code>, a valid path would be <code>DONE</code> -{">"}{" "}
+          <code>CONE</code> -{">"} <code>CONS</code>. All words in the path must
+          be 4 letters long, a word in the scrabble dictionary, not be the
+          previous word, and only be one letter different than the previous
+          word. Have fun 😉
+        </p>
+      </div>
     </div>
   );
 }
 
-function ValidationMessage({ error, isSubmitting }) {
+function ValidationMessage({
+  error,
+  isSubmitting,
+}: {
+  error: string;
+  isSubmitting: boolean;
+}) {
   const [show, setShow] = useState(!!error);
 
   useEffect(() => {

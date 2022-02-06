@@ -101,7 +101,7 @@ const isNextWordValid = ({
   // is the word 4 letters long?
   if (nextWord.length !== 4) {
     return {
-      error: `${nextWord} should be a word that is 4 letters long. Instead it is ${nextWord.length}`,
+      error: `${nextWord} should be a word that is 4 letters long. Instead it is ${nextWord.length} letter long.`,
       valid: false,
     };
   }
@@ -117,7 +117,7 @@ const isNextWordValid = ({
   // is next word the same as the top word?
   if (previousWord === nextWord) {
     return {
-      error: `Submitted word is the same as the previous word.`,
+      error: `${nextWord} is the same as the previous word.`,
       valid: false,
     };
   }
@@ -144,6 +144,7 @@ export const getDailyChallenge = async (): Promise<
   const todaysDate = mm + "-" + dd + "-" + yyyy;
   const docRef = doc(firestore, "daily-challenges", todaysDate);
   const docSnap = await getDoc(docRef);
+
   if (docSnap.exists()) {
     const { startWord, endWord } = docSnap.data();
     return { startWord, endWord };
