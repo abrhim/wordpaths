@@ -24,11 +24,7 @@ export default function Roadmap() {
           </li>
           <li>Total Games Played</li>
           <li>Games Played Consecutively (streak)</li>
-          <li>
-            Total Secret (Elyssa) words found: for each challenge have a secret
-            word that is related to the two words for the day. Present a badge
-            if the user finds it.
-          </li>
+          <li>Total Secret words found.</li>
           <li>
             Total times the user got the shortest path found for that day's
             challenge
@@ -48,7 +44,7 @@ export default function Roadmap() {
         </li>
         <li>
           Share your score: create an image with the day's challenge words along
-          with how many are in your path. (rick)
+          with how many words are in your path. (rick)
         </li>
         <li>Make word input 4 individual boxes instead of 1 (rick)</li>
       </ul>
