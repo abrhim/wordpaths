@@ -4,11 +4,11 @@ import {
   LiveReload,
   Meta,
   Outlet,
+  redirect,
   Scripts,
   ScrollRestoration,
 } from "remix";
 import type { MetaFunction } from "remix";
-import { useEffect } from "react";
 
 export const meta: MetaFunction = () => {
   return { title: "New Remix App" };
