@@ -2,7 +2,7 @@ import wordsWith4letters from "./wordsWith4Letters.json";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,6 +22,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, "0");
+var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+var yyyy = today.getFullYear();
+
+const todaysDate = mm + "-" + dd + "-" + yyyy;
+
 export type GameStateResponse = GameState & {
   error?: string;
   valid: boolean;
@@ -33,8 +40,10 @@ export type GameState = {
   path: string[];
   startWord: string;
   endWord: string;
+  shortestPath: number;
 };
 export const evaluateGameState = (gamestate: GameState): GameStateResponse => {
+  console.log(gamestate);
   const { nextWord, path, startWord, endWord } = gamestate;
 
   const { valid, error } = isNextWordValid({
@@ -51,10 +60,17 @@ export const evaluateGameState = (gamestate: GameState): GameStateResponse => {
 
   //   evaluate if it is the Seal word or not.
 
-  path.push(nextWord);
-
   //   did they win?
   if (nextWord === endWord) {
+    if (path.length < gamestate.shortestPath || !gamestate.shortestPath) {
+      const docRef = doc(firestore, "daily-challenges", todaysDate);
+      console.log({
+        shortestPath: path.length,
+      });
+      updateDoc(docRef, { shortestPath: path.length }).then((value) =>
+        console.log(value)
+      );
+    }
     return {
       ...gamestate,
       valid,
@@ -64,6 +80,8 @@ export const evaluateGameState = (gamestate: GameState): GameStateResponse => {
   }
 
   // if not, push to top, and return path.
+
+  path.push(nextWord);
 
   return {
     ...gamestate,
@@ -134,20 +152,15 @@ const isNextWordValid = ({
 };
 
 export const getDailyChallenge = async (): Promise<
-  { startWord: string; endWord: string } | { error: string }
+  | { startWord: string; endWord: string; shortestPath: number | undefined }
+  | { error: string }
 > => {
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, "0");
-  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-  var yyyy = today.getFullYear();
-
-  const todaysDate = mm + "-" + dd + "-" + yyyy;
   const docRef = doc(firestore, "daily-challenges", todaysDate);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    const { startWord, endWord } = docSnap.data();
-    return { startWord, endWord };
+    const { startWord, endWord, shortestPath } = docSnap.data();
+    return { startWord, endWord, shortestPath };
   } else {
     return { error: "Error accessing today's challenge." };
   }

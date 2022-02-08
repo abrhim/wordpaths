@@ -14,16 +14,12 @@ export const addNextWord = (nextWord: string): string[] => {
   return path;
 };
 
-export const setTerminus = (startWord: string, endWord: string): void => {
-  const gamestate = getGameState();
-  localStorage.setItem(
-    "wordpaths",
-    JSON.stringify({
-      ...gamestate,
-      startWord,
-      endWord,
-    })
-  );
+export const setLocalStorageGamestate = (gamestate: {
+  endword: string;
+  startWord: string;
+  path: string[];
+}): void => {
+  localStorage.setItem("wordpaths", JSON.stringify(gamestate));
 };
 
 export const clearGame = () => {

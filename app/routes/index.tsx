@@ -9,28 +9,27 @@ import {
 import {
   addNextWord,
   clearGame,
-  getGameState,
-  setTerminus,
+  setLocalStorageGamestate,
 } from "~/utils/localStorage";
 import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
-
+import type { GameState } from "~/utils/utils";
 // Note the "action" export name, this will handle our form POST
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
+  console.log(formData);
   const nextWord: string = formData.get("nextWord") as string;
-  const startWord: string = formData.get("startWord") as string;
-  const endWord: string = formData.get("endWord") as string;
-  const path: string[] | undefined = formData
-    .get("path")
-    ?.toString()
-    .split(",");
+  const gamestate: GameState = JSON.parse(
+    formData.get("gamestate") as string
+  ) as GameState;
+  // const startWord: string = formData.get("startWord") as string;
+  // const endWord: string = formData.get("endWord") as string;
+  // const path: string[] | undefined = formData
+  //   .get("path")
+  //   ?.toString()
+  //   .split(",");
+  //   const shortestPath = formData.get("")
 
-  return evaluateGameState({
-    nextWord: nextWord.toUpperCase(),
-    endWord: endWord.toUpperCase(),
-    startWord: startWord.toUpperCase(),
-    path: path ? path : [],
-  });
+  return evaluateGameState({ ...gamestate, nextWord });
 };
 
 export const loader = async () => {
@@ -45,9 +44,13 @@ export default function Index() {
   const transition = useTransition();
   const initialData = useLoaderData();
   const actionData = useActionData();
-  const [path, setPath] = useState<string[]>([]);
-  const [endWord, setEndWord] = useState<string>("");
-  const [startWord, setStartWord] = useState<string>("");
+  const [gamestate, setGamestate] = useState<GameState>({
+    ...initialData,
+    path: [],
+  });
+  // const [path, setPath] = useState<string[]>([]);
+  // const [endWord, setEndWord] = useState<string>("");
+  // const [startWord, setStartWord] = useState<string>("");
   const [finished, setFinished] = useState<boolean>(false);
 
   useEffect(() => {
@@ -57,7 +60,10 @@ export default function Index() {
         const pathsFromLocalStorage = addNextWord(
           actionData.nextWord.toUpperCase()
         );
-        setPath(pathsFromLocalStorage);
+        setGamestate((gamestate: GameState) => ({
+          ...gamestate,
+          path: pathsFromLocalStorage,
+        }));
       } catch (e) {
         console.log(e);
       }
@@ -66,29 +72,16 @@ export default function Index() {
 
   const initializeGame = (): void => {
     //   set starting and ending words
+    clearGame();
     if (initialData.startWord && initialData.endWord) {
-      const startWord = initialData.startWord.toUpperCase();
-      const endWord = initialData.endWord.toUpperCase();
-      const gamestate = getGameState();
-      if (gamestate?.startWord && gamestate?.startWord !== startWord) {
-        clearGame();
-      }
-      setTerminus(startWord, endWord);
+      const startWord = initialData.startWord.toUpperCase() as string;
+      const endWord = initialData.endWord.toUpperCase() as string;
+      setLocalStorageGamestate({ endWord, startWord, path: [] });
     }
   };
 
   useEffect(() => {
     initializeGame();
-    const gamestate = getGameState();
-    setPath(gamestate.path);
-    setEndWord(gamestate.endWord);
-    setStartWord(gamestate.startWord);
-    if (
-      gamestate.path &&
-      gamestate.path[gamestate.path.length - 1] === gamestate.endWord
-    ) {
-      setFinished(true);
-    }
   }, []);
 
   if (initialData.error) {
@@ -100,29 +93,41 @@ export default function Index() {
     );
   }
 
+  const { endWord, startWord, shortestPath, path } = gamestate;
+  console.log(gamestate);
+
   return (
     <div>
       <div>
         <div>
-          <h3 style={{ display: "inline" }}>start: {startWord}</h3>
-          <h3>end: {endWord}</h3>
+          <h3 style={{ display: "inline" }}>
+            start: {startWord.toUpperCase()}
+          </h3>
+          <h3>end: {endWord.toUpperCase()}</h3>
+          <h3>shortest submitted path: {shortestPath}</h3>
         </div>
-        {path
-          ? path.length > 0
-            ? path.map((word) => <div key={Math.random()}>{word}</div>)
-            : null
+        {path && path.length > 0
+          ? path.map((word) =>
+              word.toLowerCase() !== endWord.toLowerCase() ? (
+                <div key={Math.random()}>{word}</div>
+              ) : null
+            )
           : null}
 
-        {actionData?.finished ? <div>Path length: {path.length}</div> : null}
+        {actionData?.finished ? (
+          <div>Path length: {path.length - 1}</div>
+        ) : null}
 
         <Form method="post" style={{ border: "none" }}>
           <fieldset
             style={{ border: "none" }}
             disabled={transition.state === "submitting"}
           >
-            <input type="hidden" value={path} name="path" />
-            <input type="hidden" value={startWord} name="startWord" />
-            <input type="hidden" value={endWord} name="endWord" />
+            <input
+              type="hidden"
+              value={JSON.stringify(gamestate)}
+              name="gamestate"
+            />
             <h3 hidden={!finished}>Finished!</h3>
             <input
               hidden={finished}
