@@ -29,7 +29,12 @@ export const action: ActionFunction = async ({ request }) => {
   //   .split(",");
   //   const shortestPath = formData.get("")
 
-  return evaluateGameState({ ...gamestate, nextWord });
+  return evaluateGameState({
+    ...gamestate,
+    endWord: gamestate.endWord.toUpperCase(),
+    startWord: gamestate.startWord.toUpperCase(),
+    nextWord: nextWord.toUpperCase(),
+  });
 };
 
 export const loader = async () => {
