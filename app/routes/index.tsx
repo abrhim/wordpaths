@@ -6,28 +6,16 @@ import {
   useTransition,
   useLoaderData,
 } from "remix";
-import {
-  addNextWord,
-  clearGame,
-  setLocalStorageGamestate,
-} from "~/utils/localStorage";
+
 import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 import type { GameState } from "~/utils/utils";
-// Note the "action" export name, this will handle our form POST
+
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  console.log(formData);
   const nextWord: string = formData.get("nextWord") as string;
   const gamestate: GameState = JSON.parse(
     formData.get("gamestate") as string
   ) as GameState;
-  // const startWord: string = formData.get("startWord") as string;
-  // const endWord: string = formData.get("endWord") as string;
-  // const path: string[] | undefined = formData
-  //   .get("path")
-  //   ?.toString()
-  //   .split(",");
-  //   const shortestPath = formData.get("")
 
   return evaluateGameState({
     ...gamestate,
@@ -62,32 +50,16 @@ export default function Index() {
     if (actionData?.valid) {
       if (actionData.finished) setFinished(true);
       try {
-        const pathsFromLocalStorage = addNextWord(
-          actionData.nextWord.toUpperCase()
-        );
+        console.log({ actionData, gamestate });
         setGamestate((gamestate: GameState) => ({
           ...gamestate,
-          path: pathsFromLocalStorage,
+          path: actionData.path,
         }));
       } catch (e) {
         console.log(e);
       }
     }
   }, [actionData]);
-
-  const initializeGame = (): void => {
-    //   set starting and ending words
-    clearGame();
-    if (initialData.startWord && initialData.endWord) {
-      const startWord = initialData.startWord.toUpperCase() as string;
-      const endWord = initialData.endWord.toUpperCase() as string;
-      setLocalStorageGamestate({ endWord, startWord, path: [] });
-    }
-  };
-
-  useEffect(() => {
-    initializeGame();
-  }, []);
 
   if (initialData.error) {
     return (
@@ -99,7 +71,6 @@ export default function Index() {
   }
 
   const { endWord, startWord, shortestPath, path } = gamestate;
-  console.log(gamestate);
 
   return (
     <div>
@@ -155,7 +126,6 @@ export default function Index() {
             <button
               type="button"
               onClick={() => {
-                localStorage.setItem("wordpaths", "");
                 window.location.reload();
               }}
             >
