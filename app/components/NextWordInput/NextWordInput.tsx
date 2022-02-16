@@ -43,21 +43,23 @@ export const NextWordInput: FC<NextWordInputProps> = ({
   if (hidden) return null;
   return (
     <div>
-      {nextWord.map((char, index) => (
-        <NextLetterInput
-          key={index}
-          hidden={hidden}
-          invalid={invalid}
-          onChange={(changedChar) => {
-            wordChange({ index, char: changedChar });
-          }}
-          setFocusToNextCharacter={() => {
-            setFocusToNextCharacter(index);
-          }}
-          index={index}
-          id={`${nextLetterIdBase}${index}`}
-        />
-      ))}
+      <div className="NextWordInput">
+        {nextWord.map((char, index) => (
+          <NextLetterInput
+            key={index}
+            hidden={hidden}
+            invalid={invalid}
+            onChange={(changedChar) => {
+              wordChange({ index, char: changedChar });
+            }}
+            setFocusToNextCharacter={() => {
+              setFocusToNextCharacter(index);
+            }}
+            index={index}
+            id={`${nextLetterIdBase}${index}`}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -103,6 +105,9 @@ const NextLetterInput: FC<NextLetterInputProps> = ({
         if (char && letters.includes(e.key)) {
           setChar(e.key);
           onChange(e.key);
+        } else if (char && (e.key === "Backspace" || e.key === "Delete")) {
+          setChar("");
+          onChange("");
         }
       }}
       onChange={(e) => {

@@ -9,25 +9,35 @@
   display: block;
 }
 
-body {
+main {
   padding: 0 300px;
 }
+
 .PathTable {
   margin-bottom: 30px;
   table-layout: auto;
   text-align: center;
   vertical-align: middle;
 }
-.Game {
+.PathTable > table {
   margin: auto;
 }
+
+fieldset {
+  table-layout: auto;
+  text-align: center;
+  vertical-align: middle;
+}
+
+fieldset > .NextWordInputBox {
+  margin: auto;
+}
+
 .LetterBox {
-  padding: auto;
-  margin: 5px;
+  padding: 0px;
+  margin: 3px;
   font-size: 1.5rem;
   border: 1px solid grey;
-  /* display: inline-flex;
-  align-items: center;*/
   text-align: center;
   display: table-cell;
   vertical-align: middle;
@@ -36,6 +46,10 @@ body {
   border-radius: 10%;
 }
 
+td {
+  padding: 0px;
+  margin: 10px;
+}
 /* Animation for scrolling letters at top */
 
 .scroller {
