@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActionFunction,
   useActionData,
@@ -9,6 +9,8 @@ import {
 
 import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 import type { GameState } from "~/utils/utils";
+import { Header } from "~/components/Header";
+import { PathTable } from "~/components/PathTable";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -34,6 +36,7 @@ export const unstable_shouldReload = () => false;
 export default function Index() {
   // when the form is being processed on the server, this returns different
   // transition states to help us build pending and optimistic UI.
+  const nextWordInput = useRef();
   const transition = useTransition();
   const initialData = useLoaderData();
   const actionData = useActionData();
@@ -41,16 +44,12 @@ export default function Index() {
     ...initialData,
     path: [],
   });
-  // const [path, setPath] = useState<string[]>([]);
-  // const [endWord, setEndWord] = useState<string>("");
-  // const [startWord, setStartWord] = useState<string>("");
   const [finished, setFinished] = useState<boolean>(false);
 
   useEffect(() => {
     if (actionData?.valid) {
       if (actionData.finished) setFinished(true);
       try {
-        console.log({ actionData, gamestate });
         setGamestate((gamestate: GameState) => ({
           ...gamestate,
           path: actionData.path,
@@ -60,6 +59,14 @@ export default function Index() {
       }
     }
   }, [actionData]);
+  useEffect(() => {
+    console.log(transition);
+    if (transition.state === "idle") {
+      const nextWordInputBox = document.getElementById("nextWordInput");
+      nextWordInputBox?.focus();
+      console.log("focusing!!");
+    }
+  }, [transition]);
 
   if (initialData.error) {
     return (
@@ -71,28 +78,18 @@ export default function Index() {
   }
 
   const { endWord, startWord, shortestPath, path } = gamestate;
-
   return (
     <div>
-      <div>
+      <Header />
+      <div id="game">
         <div>
-          <h3 style={{ display: "inline" }}>
-            start: {startWord.toUpperCase()}
-          </h3>
+          <h3>start: {startWord.toUpperCase()}</h3>
           <h3>end: {endWord.toUpperCase()}</h3>
           <h3>shortest submitted path: {shortestPath}</h3>
         </div>
-        {path && path.length > 0
-          ? path.map((word) =>
-              word.toLowerCase() !== endWord.toLowerCase() ? (
-                <div key={Math.random()}>{word}</div>
-              ) : null
-            )
-          : null}
+        <PathTable path={path} />
 
-        {actionData?.finished ? (
-          <div>Path length: {path.length - 1}</div>
-        ) : null}
+        {actionData?.finished ? <div>Path length: {path.length}</div> : null}
 
         <Form method="post" style={{ border: "none" }}>
           <fieldset
@@ -114,6 +111,8 @@ export default function Index() {
                 textTransform: "uppercase",
               }}
               maxLength={4}
+              autoFocus
+              id="nextWordInput"
             />
             <button type="submit" hidden={finished}>
               {transition.state === "submitting" ? "Submitting..." : "Submit"}

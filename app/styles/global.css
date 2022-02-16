@@ -1,0 +1,70 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+#pageTitle {
+  text-align: center;
+  display: block;
+}
+
+#game {
+  padding: 0 300px;
+}
+.PathTable {
+  margin-bottom: 30px;
+  display: table;
+  table-layout: auto;
+}
+.LetterBox {
+  padding: auto;
+  margin: 5px;
+  font-size: 1.5rem;
+  border: 1px solid grey;
+  /* display: inline-flex;
+  align-items: center;*/
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  width: 40px;
+  height: 40px;
+}
+/* Animation for scrolling letters at top */
+
+.scroller {
+  /* display: inline; */
+  height: 1.2em;
+  line-height: 1.2em;
+  position: relative;
+  overflow: hidden;
+  width: 10em;
+}
+
+.scroller > span {
+  position: absolute;
+  top: 0;
+  animation: slide-in 1.5s;
+  /* animation-iteration-count: infinite; */
+  animation-timing-function: ease;
+
+  font-weight: bold;
+}
+
+@keyframes slide-in {
+  100% {
+    top: 0;
+  }
+  75% {
+    top: -1.2em;
+  }
+  50% {
+    top: -2.4em;
+  }
+  25% {
+    top: -3.6em;
+  }
+  0% {
+    top: -3.6em;
+  }
+}

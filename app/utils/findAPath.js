@@ -32,10 +32,12 @@ const calculateEachWordsSiblings = () => {
   console.log(words[0], words[words.length - 1]);
 };
 
-const startWord = "hugs";
-const ends = "date";
+const startWord = "bads";
+const ends = "good";
 console.log(startWord, findAllWords1letterApart(startWord));
 console.log(ends, findAllWords1letterApart(ends));
+
+// console.log("ants", findAllWords1letterApart("ants"));
 
 // console.log("origin");
 // const word = "loop";
