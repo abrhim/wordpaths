@@ -16,23 +16,17 @@ const Template: ComponentStory<typeof NextWordInput> = (args) => (
   <NextWordInput {...args} />
 );
 
-export const DefaultValue = Template.bind({});
-DefaultValue.args = {
-  defaultValue: "bell",
-};
 export const Hidden = Template.bind({});
-DefaultValue.args = {
+Hidden.args = {
   hidden: true,
 };
 export const Error = Template.bind({});
 Error.args = {
   invalid: true,
-  defaultValue: "bads",
 };
 
 export const AcceptsInput = Template.bind({});
 AcceptsInput.args = {
   invalid: false,
-  defaultValue: "",
   onChange: (value) => console.log(value),
 };
