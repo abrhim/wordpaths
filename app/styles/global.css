@@ -9,13 +9,17 @@
   display: block;
 }
 
-#game {
+body {
   padding: 0 300px;
 }
 .PathTable {
   margin-bottom: 30px;
-  display: table;
   table-layout: auto;
+  text-align: center;
+  vertical-align: middle;
+}
+.Game {
+  margin: auto;
 }
 .LetterBox {
   padding: auto;
@@ -29,7 +33,9 @@
   vertical-align: middle;
   width: 40px;
   height: 40px;
+  border-radius: 10%;
 }
+
 /* Animation for scrolling letters at top */
 
 .scroller {

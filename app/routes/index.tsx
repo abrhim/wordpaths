@@ -11,6 +11,7 @@ import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 import type { GameState } from "~/utils/utils";
 import { Header } from "~/components/Header";
 import { PathTable } from "~/components/PathTable";
+import { NextWordInput } from "~/components/NextWordInput";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -36,7 +37,7 @@ export const unstable_shouldReload = () => false;
 export default function Index() {
   // when the form is being processed on the server, this returns different
   // transition states to help us build pending and optimistic UI.
-  const nextWordInput = useRef();
+  const [nextWord, setNextWord] = useState<string>("");
   const transition = useTransition();
   const initialData = useLoaderData();
   const actionData = useActionData();
@@ -59,14 +60,10 @@ export default function Index() {
       }
     }
   }, [actionData]);
-  useEffect(() => {
-    console.log(transition);
-    if (transition.state === "idle") {
-      const nextWordInputBox = document.getElementById("nextWordInput");
-      nextWordInputBox?.focus();
-      console.log("focusing!!");
-    }
-  }, [transition]);
+
+  const onNextWordChange = (word: string) => {
+    setNextWord(word);
+  };
 
   if (initialData.error) {
     return (
@@ -81,7 +78,7 @@ export default function Index() {
   return (
     <div>
       <Header />
-      <div id="game">
+      <div className="Game">
         <div>
           <h3>start: {startWord.toUpperCase()}</h3>
           <h3>end: {endWord.toUpperCase()}</h3>
@@ -101,18 +98,14 @@ export default function Index() {
               value={JSON.stringify(gamestate)}
               name="gamestate"
             />
+            <input type="hidden" value={nextWord} name="nextWord" />
+
             <h3 hidden={!finished}>Finished!</h3>
-            <input
+            <NextWordInput
               hidden={finished}
-              name="nextWord"
-              type="text"
-              style={{
-                borderColor: actionData?.errors?.nextWord ? "red" : "",
-                textTransform: "uppercase",
-              }}
-              maxLength={4}
-              autoFocus
-              id="nextWordInput"
+              invalid={actionData?.errors?.nextWord}
+              onChange={onNextWordChange}
+              reset={actionData}
             />
             <button type="submit" hidden={finished}>
               {transition.state === "submitting" ? "Submitting..." : "Submit"}

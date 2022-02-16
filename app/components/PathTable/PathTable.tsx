@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import "../../styles/global.css";
 type Path = string[];
 
 export const PathTable: FC<{ path: Path }> = ({ path }) => {
@@ -26,5 +27,5 @@ export const PathTable: FC<{ path: Path }> = ({ path }) => {
 };
 
 const LetterBox: FC<{ letter: string }> = ({ letter }) => {
-  return <span className="LetterBox">{letter}</span>;
+  return <span className="LetterBox">{letter.toUpperCase()}</span>;
 };
