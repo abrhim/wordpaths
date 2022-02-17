@@ -25,14 +25,22 @@
   }
 }
 
+.ChallengeOfTheDay {
+  text-align: center;
+  display: block;
+  margin: auto;
+}
 .PathTable {
   margin-bottom: 30px;
   table-layout: auto;
   text-align: center;
   vertical-align: middle;
 }
-.PathTable > table {
+table {
   margin: auto;
+}
+td {
+  text-align: center;
 }
 
 fieldset {
@@ -49,12 +57,12 @@ fieldset > .NextWordInputBox {
   padding: 0px;
   margin: 3px;
   font-size: 1.5rem;
-  border: 1px solid grey;
+  border: 1.5px solid grey;
   text-align: center;
   display: table-cell;
   vertical-align: middle;
-  width: 40px;
-  height: 40px;
+  width: 3rem;
+  height: 3rem;
   border-radius: 10%;
 }
 

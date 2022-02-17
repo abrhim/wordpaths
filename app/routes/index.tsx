@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   ActionFunction,
   useActionData,
@@ -81,14 +81,15 @@ export default function Index() {
         <Header />
       </nav>
       <main>
-        <div>
-          <h3>start: {startWord.toUpperCase()}</h3>
-          <h3>end: {endWord.toUpperCase()}</h3>
-          <h3>shortest submitted path: {shortestPath}</h3>
-        </div>
-        <PathTable path={path} />
-
-        {actionData?.finished ? <div>Path length: {path.length}</div> : null}
+        <ChallengeOfTheDay
+          startWord={startWord}
+          endWord={endWord}
+          shortestPathLength={shortestPath}
+          currentPathLength={path.length}
+        />
+        <PathTable
+          path={finished ? path.concat(endWord.toUpperCase()) : path}
+        />
 
         <Form method="post" style={{ border: "none" }}>
           <fieldset
@@ -109,6 +110,10 @@ export default function Index() {
               onChange={onNextWordChange}
               reset={actionData}
             />
+            <br />
+
+            <br />
+
             <button type="submit" hidden={finished}>
               {transition.state === "submitting" ? "Submitting..." : "Submit"}
             </button>
@@ -179,3 +184,49 @@ function ValidationMessage({
     </div>
   );
 }
+
+const ChallengeOfTheDay: FC<{
+  startWord: string;
+  endWord: string;
+  shortestPathLength: number;
+  currentPathLength: number;
+}> = ({ startWord, endWord, shortestPathLength, currentPathLength }) => (
+  <div className="ChallengeOfTheDay">
+    <table>
+      <tbody>
+        <tr>
+          {startWord
+            .toUpperCase()
+            .split("")
+            .map((letter: string) => (
+              <td key={Math.random()}>
+                <span className={"LetterBox"}>{letter}</span>
+              </td>
+            ))}
+          <td>
+            <span>➡️</span>
+          </td>
+          {endWord
+            .toUpperCase()
+            .split("")
+            .map((letter: string) => (
+              <td key={Math.random()}>
+                {" "}
+                <span className={"LetterBox"}>{letter}</span>
+              </td>
+            ))}
+        </tr>
+        <tr>
+          <td colSpan={5}>
+            {shortestPathLength ? (
+              <h3>shortest path: {shortestPathLength} </h3>
+            ) : null}
+          </td>
+          <td colSpan={5}>
+            <h3>your path: {currentPathLength ? currentPathLength : 0}</h3>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+);
