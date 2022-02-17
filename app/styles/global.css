@@ -27,6 +27,9 @@
 .DifferentLetter {
   background-color: #b7d9f5;
 }
+.CorrectLetter {
+  background-color: #b7f5b9;
+}
 
 .ChallengeOfTheDay {
   text-align: center;

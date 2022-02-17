@@ -2,10 +2,11 @@ import type { FC } from "react";
 import "../../styles/global.css";
 type Path = string[];
 
-export const PathTable: FC<{ path: Path; startWord: string }> = ({
-  path,
-  startWord,
-}) => {
+export const PathTable: FC<{
+  path: Path;
+  startWord: string;
+  endWord: string;
+}> = ({ path, startWord, endWord }) => {
   if (!path || !path.length) return null;
   const differentLetters = getDifferentLetters(path, startWord);
   return (
@@ -21,6 +22,10 @@ export const PathTable: FC<{ path: Path; startWord: string }> = ({
                     <LetterBox
                       letter={letter}
                       differentLetter={differentLetters[wordIndex][letterIndex]}
+                      correctLetter={
+                        letter.toUpperCase() ===
+                        endWord.split("")[letterIndex].toUpperCase()
+                      }
                     />
                   </td>
                 ))}
@@ -33,12 +38,22 @@ export const PathTable: FC<{ path: Path; startWord: string }> = ({
   );
 };
 
-const LetterBox: FC<{ letter: string; differentLetter: boolean }> = ({
-  letter,
-  differentLetter,
-}) => {
+const LetterBox: FC<{
+  letter: string;
+  differentLetter: boolean;
+  correctLetter: boolean;
+}> = ({ letter, differentLetter, correctLetter }) => {
+  console.log({ letter, differentLetter, correctLetter });
   return (
-    <span className={`LetterBox ${differentLetter ? "DifferentLetter" : ""}`}>
+    <span
+      className={`LetterBox ${
+        correctLetter
+          ? "CorrectLetter"
+          : differentLetter
+          ? "DifferentLetter"
+          : ""
+      }`}
+    >
       {letter.toUpperCase()}
     </span>
   );
