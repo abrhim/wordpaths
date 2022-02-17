@@ -56,6 +56,11 @@ fieldset > .NextWordInputBox {
   margin: auto;
 }
 
+.Button {
+  width: 100px;
+  height: 40px;
+}
+
 .LetterBox {
   padding: 0px;
   margin: 3px;

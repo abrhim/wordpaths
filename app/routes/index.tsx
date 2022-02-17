@@ -115,7 +115,7 @@ export default function Index() {
 
             <br />
 
-            <button type="submit" hidden={finished}>
+            <button className="Button" type="submit" hidden={finished}>
               {transition.state === "submitting" ? "Submitting..." : "Submit"}
             </button>
             <ValidationMessage
@@ -125,6 +125,7 @@ export default function Index() {
             <br />
             <button
               type="button"
+              className="Button"
               onClick={() => {
                 window.location.reload();
               }}
