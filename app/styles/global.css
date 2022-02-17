@@ -9,9 +9,21 @@
   display: block;
 }
 
-/* main {
-  padding: 0 300px;
-} */
+@media (min-width: 1024px) {
+  main {
+    padding: 0 20%;
+  }
+}
+@media (max-width: 1024px) {
+  main {
+    padding: 0 10%;
+  }
+}
+@media (max-width: 537px) {
+  main {
+    padding: 0 5%;
+  }
+}
 
 .PathTable {
   margin-bottom: 30px;
