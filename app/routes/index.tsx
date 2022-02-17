@@ -89,6 +89,7 @@ export default function Index() {
         />
         <PathTable
           path={finished ? path.concat(endWord.toUpperCase()) : path}
+          startWord={startWord}
         />
 
         <Form method="post" style={{ border: "none" }}>
