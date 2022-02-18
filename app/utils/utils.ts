@@ -43,7 +43,6 @@ export type GameState = {
   shortestPath: number;
 };
 export const evaluateGameState = (gamestate: GameState): GameStateResponse => {
-  console.log(gamestate);
   const { nextWord, path, startWord, endWord } = gamestate;
 
   const { valid, error } = isNextWordValid({
@@ -64,9 +63,7 @@ export const evaluateGameState = (gamestate: GameState): GameStateResponse => {
   if (nextWord === endWord) {
     if (path.length < gamestate.shortestPath || !gamestate.shortestPath) {
       const docRef = doc(firestore, "daily-challenges", todaysDate);
-      console.log({
-        shortestPath: path.length,
-      });
+
       updateDoc(docRef, { shortestPath: path.length }).then((value) =>
         console.log(value)
       );
@@ -97,7 +94,6 @@ export const isWordValidInDictionary = (word: string) => {
 };
 
 const areTwoWordsOneLetterApart = (word1: string, word2: string): boolean => {
-  console.log(word1, word2);
   const word1Array: string[] = word1.toUpperCase().split("");
   const word2Array: string[] = word2.toUpperCase().split("");
   let numOfLettersDifferentFromEachOther = 0;

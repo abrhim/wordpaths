@@ -7,7 +7,6 @@ export const PathTable: FC<{
   endWord: string;
   finished: boolean;
 }> = ({ path, startWord, endWord, children, finished }) => {
-  console.log(finished);
   return (
     <div className="PathTable">
       <table>

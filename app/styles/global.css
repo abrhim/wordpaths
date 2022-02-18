@@ -42,6 +42,7 @@
   table-layout: auto;
   text-align: center;
   vertical-align: middle;
+  display: grid;
 }
 table {
   margin: auto;
