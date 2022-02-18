@@ -185,6 +185,7 @@ function ValidationMessage({
         color: "red",
         transition: "all 300ms ease-in-out",
         wordBreak: "break-word",
+        margin: "20px",
       }}
     >
       {error}
