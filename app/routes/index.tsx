@@ -95,16 +95,11 @@ export default function Index() {
             reset={actionData}
             placeHolder={path.length > 0 ? path[path.length - 1] : startWord}
           />
-          <tr>
-            <td colSpan={10}>
-              <ValidationMessage
-                error={actionData?.error}
-                isSubmitting={transition.state === "submitting"}
-              />
-            </td>
-          </tr>
         </PathTable>
-
+        <ValidationMessage
+          error={actionData?.error}
+          isSubmitting={transition.state === "submitting"}
+        />
         <Form method="post" style={{ border: "none" }}>
           <fieldset
             style={{ border: "none" }}
