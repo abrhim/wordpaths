@@ -6,14 +6,22 @@ export const PathTable: FC<{
   path: Path;
   startWord: string;
   endWord: string;
-}> = ({ path, startWord, endWord }) => {
-  if (!path || !path.length) return null;
-  const differentLetters = getDifferentLetters(path, startWord);
+}> = ({ path, startWord, endWord, children }) => {
+  // if (!path || !path.length) return
   return (
     <div className="PathTable">
       <table>
         <tbody>
-          {path.map((word, wordIndex) => {
+          <tr>
+            {startWord.split("").map((letter) => (
+              <td>
+                <LetterBox letter={letter} correctLetter={false} />
+              </td>
+            ))}
+          </tr>
+          <br />
+
+          {path?.map((word) => {
             const letters = word.split("");
             return (
               <tr key={Math.random()}>
@@ -21,7 +29,6 @@ export const PathTable: FC<{
                   <td key={Math.random()}>
                     <LetterBox
                       letter={letter}
-                      differentLetter={differentLetters[wordIndex][letterIndex]}
                       correctLetter={
                         letter.toUpperCase() ===
                         endWord.split("")[letterIndex].toUpperCase()
@@ -32,6 +39,15 @@ export const PathTable: FC<{
               </tr>
             );
           })}
+          {children}
+          <br />
+          <tr>
+            {endWord.split("").map((letter) => (
+              <td>
+                <LetterBox letter={letter} correctLetter={false} />
+              </td>
+            ))}
+          </tr>
         </tbody>
       </table>
     </div>
@@ -40,20 +56,10 @@ export const PathTable: FC<{
 
 const LetterBox: FC<{
   letter: string;
-  differentLetter: boolean;
   correctLetter: boolean;
-}> = ({ letter, differentLetter, correctLetter }) => {
-  console.log({ letter, differentLetter, correctLetter });
+}> = ({ letter, correctLetter }) => {
   return (
-    <span
-      className={`LetterBox ${
-        correctLetter
-          ? "CorrectLetter"
-          : differentLetter
-          ? "DifferentLetter"
-          : ""
-      }`}
-    >
+    <span className={`LetterBox ${correctLetter ? "CorrectLetter" : ""}`}>
       {letter.toUpperCase()}
     </span>
   );

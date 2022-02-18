@@ -42,9 +42,9 @@ export const NextWordInput: FC<NextWordInputProps> = ({
 
   if (hidden) return null;
   return (
-    <div>
-      <div className="NextWordInput">
-        {nextWord.map((char, index) => (
+    <tr>
+      {nextWord.map((char, index) => (
+        <td>
           <NextLetterInput
             key={index}
             hidden={hidden}
@@ -58,9 +58,9 @@ export const NextWordInput: FC<NextWordInputProps> = ({
             index={index}
             id={`${nextLetterIdBase}${index}`}
           />
-        ))}
-      </div>
-    </div>
+        </td>
+      ))}
+    </tr>
   );
 };
 

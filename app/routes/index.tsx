@@ -87,11 +87,22 @@ export default function Index() {
           shortestPathLength={shortestPath}
           currentPathLength={path.length}
         />
-        <PathTable
-          path={finished ? path.concat(endWord.toUpperCase()) : path}
-          startWord={startWord}
-          endWord={endWord}
-        />
+        <PathTable path={path} startWord={startWord} endWord={endWord}>
+          <NextWordInput
+            hidden={finished}
+            invalid={actionData?.errors?.nextWord}
+            onChange={onNextWordChange}
+            reset={actionData}
+          />
+          <tr>
+            <td colSpan={4}>
+              <ValidationMessage
+                error={actionData?.error}
+                isSubmitting={transition.state === "submitting"}
+              />
+            </td>
+          </tr>
+        </PathTable>
 
         <Form method="post" style={{ border: "none" }}>
           <fieldset
@@ -106,12 +117,7 @@ export default function Index() {
             <input type="hidden" value={nextWord} name="nextWord" />
 
             <h3 hidden={!finished}>Finished!</h3>
-            <NextWordInput
-              hidden={finished}
-              invalid={actionData?.errors?.nextWord}
-              onChange={onNextWordChange}
-              reset={actionData}
-            />
+
             <br />
 
             <br />
@@ -119,10 +125,7 @@ export default function Index() {
             <button className="Button" type="submit" hidden={finished}>
               {transition.state === "submitting" ? "Submitting..." : "Submit"}
             </button>
-            <ValidationMessage
-              error={actionData?.error}
-              isSubmitting={transition.state === "submitting"}
-            />
+
             <br />
             <button
               type="button"
@@ -195,41 +198,12 @@ const ChallengeOfTheDay: FC<{
   currentPathLength: number;
 }> = ({ startWord, endWord, shortestPathLength, currentPathLength }) => (
   <div className="ChallengeOfTheDay">
-    <table>
-      <tbody>
-        <tr>
-          {startWord
-            .toUpperCase()
-            .split("")
-            .map((letter: string) => (
-              <td key={Math.random()}>
-                <span className={"LetterBox"}>{letter}</span>
-              </td>
-            ))}
-          <td>
-            <span>➡️</span>
-          </td>
-          {endWord
-            .toUpperCase()
-            .split("")
-            .map((letter: string) => (
-              <td key={Math.random()}>
-                {" "}
-                <span className={"LetterBox"}>{letter}</span>
-              </td>
-            ))}
-        </tr>
-        <tr>
-          <td colSpan={5}>
-            {shortestPathLength ? (
-              <h3>shortest path: {shortestPathLength} </h3>
-            ) : null}
-          </td>
-          <td colSpan={5}>
-            <h3>your path: {currentPathLength ? currentPathLength : 0}</h3>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <h2>
+      {startWord.toUpperCase()} ➡️ {endWord.toUpperCase()}
+    </h2>
+
+    {shortestPathLength ? <h3>Shortest path: {shortestPathLength} </h3> : null}
+
+    <h3>Your path: {currentPathLength ? currentPathLength : 0}</h3>
   </div>
 );
