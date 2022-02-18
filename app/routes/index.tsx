@@ -125,7 +125,8 @@ export default function Index() {
             <button className="Button" type="submit" hidden={finished}>
               {transition.state === "submitting" ? "Submitting..." : "Submit"}
             </button>
-
+            <br />
+            <br />
             <br />
             <button
               type="button"

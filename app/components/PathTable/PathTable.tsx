@@ -14,12 +14,11 @@ export const PathTable: FC<{
         <tbody>
           <tr>
             {startWord.split("").map((letter) => (
-              <td>
+              <td key={Math.random()}>
                 <LetterBox letter={letter} correctLetter={false} />
               </td>
             ))}
           </tr>
-          <br />
 
           {path?.map((word) => {
             const letters = word.split("");
@@ -40,10 +39,9 @@ export const PathTable: FC<{
             );
           })}
           {children}
-          <br />
           <tr>
             {endWord.split("").map((letter) => (
-              <td>
+              <td key={Math.random()}>
                 <LetterBox letter={letter} correctLetter={false} />
               </td>
             ))}

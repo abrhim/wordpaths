@@ -42,25 +42,26 @@ export const NextWordInput: FC<NextWordInputProps> = ({
 
   if (hidden) return null;
   return (
-    <tr>
-      {nextWord.map((char, index) => (
-        <td>
-          <NextLetterInput
-            key={index}
-            hidden={hidden}
-            invalid={invalid}
-            onChange={(changedChar) => {
-              wordChange({ index, char: changedChar });
-            }}
-            setFocusToNextCharacter={() => {
-              setFocusToNextCharacter(index);
-            }}
-            index={index}
-            id={`${nextLetterIdBase}${index}`}
-          />
-        </td>
-      ))}
-    </tr>
+    <>
+      <tr>
+        {nextWord.map((char, index) => (
+          <td key={index}>
+            <NextLetterInput
+              hidden={hidden}
+              invalid={invalid}
+              onChange={(changedChar) => {
+                wordChange({ index, char: changedChar });
+              }}
+              setFocusToNextCharacter={() => {
+                setFocusToNextCharacter(index);
+              }}
+              index={index}
+              id={`${nextLetterIdBase}${index}`}
+            />
+          </td>
+        ))}
+      </tr>
+    </>
   );
 };
 

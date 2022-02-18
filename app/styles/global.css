@@ -48,6 +48,8 @@ table {
 td {
   text-align: center;
 }
+input[type="text"] {
+}
 
 fieldset {
   table-layout: auto;
