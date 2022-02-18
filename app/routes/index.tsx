@@ -93,9 +93,10 @@ export default function Index() {
             invalid={actionData?.errors?.nextWord}
             onChange={onNextWordChange}
             reset={actionData}
+            placeHolder={path.length > 0 ? path[path.length - 1] : startWord}
           />
           <tr>
-            <td colSpan={4}>
+            <td colSpan={10}>
               <ValidationMessage
                 error={actionData?.error}
                 isSubmitting={transition.state === "submitting"}
@@ -185,6 +186,7 @@ function ValidationMessage({
         height: show ? "1em" : 0,
         color: "red",
         transition: "all 300ms ease-in-out",
+        wordBreak: "break-word",
       }}
     >
       {error}

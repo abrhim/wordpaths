@@ -7,7 +7,6 @@ export const PathTable: FC<{
   startWord: string;
   endWord: string;
 }> = ({ path, startWord, endWord, children }) => {
-  // if (!path || !path.length) return
   return (
     <div className="PathTable">
       <table>

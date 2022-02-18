@@ -8,13 +8,16 @@ type NextWordInputProps = {
   hidden: boolean;
   invalid: boolean;
   reset: any;
+  placeHolder: string;
 };
 
+const initState = ["", "", "", ""];
 export const NextWordInput: FC<NextWordInputProps> = ({
   onChange,
   hidden,
   invalid,
   reset,
+  placeHolder,
 }) => {
   const [nextWord, setNextWord] = useState<string[]>(["", "", "", ""]);
 
@@ -49,6 +52,7 @@ export const NextWordInput: FC<NextWordInputProps> = ({
             <NextLetterInput
               hidden={hidden}
               invalid={invalid}
+              placeHolder={placeHolder}
               onChange={(changedChar) => {
                 wordChange({ index, char: changedChar });
               }}
@@ -75,6 +79,7 @@ type NextLetterInputProps = {
   invalid: boolean;
   index: number;
   id: string;
+  placeHolder: string;
   onChange: (character: string) => void;
   setFocusToNextCharacter: () => void;
 };
@@ -86,14 +91,22 @@ const NextLetterInput: FC<NextLetterInputProps> = ({
   setFocusToNextCharacter,
   index,
   id,
+  placeHolder,
 }) => {
   const [char, setChar] = useState<string>("");
-
+  const onCharChange = (value: string) => {
+    setChar(value);
+    onChange(value);
+  };
+  useEffect(() => {
+    onCharChange("");
+  }, [placeHolder]);
   return (
     <input
       value={char}
       autoFocus={index === 0}
       id={id}
+      placeholder={placeHolder.split("")[index]}
       hidden={hidden}
       className="LetterBox"
       type="text"
@@ -104,17 +117,15 @@ const NextLetterInput: FC<NextLetterInputProps> = ({
       maxLength={1}
       onKeyDown={(e) => {
         if (char && letters.includes(e.key)) {
-          setChar(e.key);
-          onChange(e.key);
+          onCharChange(e.key);
         } else if (char && (e.key === "Backspace" || e.key === "Delete")) {
-          setChar("");
-          onChange("");
+          onCharChange("");
         }
       }}
       onChange={(e) => {
         if (letters.includes(e.target.value)) {
-          setChar(e.target.value);
-          onChange(e.target.value);
+          onCharChange(e.target.value);
+
           setFocusToNextCharacter();
         }
       }}
