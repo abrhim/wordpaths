@@ -87,24 +87,32 @@ export default function Index() {
           shortestPathLength={shortestPath}
           currentPathLength={path.length}
         />
-        <PathTable path={path} startWord={startWord} endWord={endWord}>
-          <NextWordInput
-            hidden={finished}
-            invalid={actionData?.errors?.nextWord}
-            onChange={onNextWordChange}
-            reset={actionData}
-            placeHolder={path.length > 0 ? path[path.length - 1] : startWord}
-          />
-        </PathTable>
-        <ValidationMessage
-          error={actionData?.error}
-          isSubmitting={transition.state === "submitting"}
-        />
+
         <Form method="post" style={{ border: "none" }}>
           <fieldset
             style={{ border: "none" }}
             disabled={transition.state === "submitting"}
           >
+            <PathTable
+              path={path}
+              startWord={startWord}
+              endWord={endWord}
+              finished={finished}
+            >
+              <NextWordInput
+                hidden={finished}
+                invalid={actionData?.errors?.nextWord}
+                onChange={onNextWordChange}
+                reset={actionData}
+                placeHolder={
+                  path.length > 0 ? path[path.length - 1] : startWord
+                }
+              />
+            </PathTable>
+            <ValidationMessage
+              error={actionData?.error}
+              isSubmitting={transition.state === "submitting"}
+            />
             <input
               type="hidden"
               value={JSON.stringify(gamestate)}
@@ -114,14 +122,9 @@ export default function Index() {
 
             <h3 hidden={!finished}>Finished!</h3>
 
-            <br />
-
-            <br />
-
             <button className="Button" type="submit" hidden={finished}>
               {transition.state === "submitting" ? "Submitting..." : "Submit"}
             </button>
-            <br />
             <br />
             <br />
             <button

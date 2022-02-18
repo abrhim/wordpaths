@@ -1,12 +1,13 @@
 import type { FC } from "react";
 import "../../styles/global.css";
-type Path = string[];
 
 export const PathTable: FC<{
-  path: Path;
+  path: string[];
   startWord: string;
   endWord: string;
-}> = ({ path, startWord, endWord, children }) => {
+  finished: boolean;
+}> = ({ path, startWord, endWord, children, finished }) => {
+  console.log(finished);
   return (
     <div className="PathTable">
       <table>
@@ -39,9 +40,17 @@ export const PathTable: FC<{
           })}
           {children}
           <tr>
-            {endWord.split("").map((letter) => (
+            {endWord.split("").map((letter, index) => (
               <td key={Math.random()}>
-                <LetterBox letter={letter} correctLetter={false} />
+                <LetterBox
+                  letter={letter}
+                  correctLetter={
+                    path && path.length > 0
+                      ? path[path.length - 1].split("")[index].toUpperCase() ===
+                          letter.toUpperCase() || finished
+                      : false
+                  }
+                />
               </td>
             ))}
           </tr>
