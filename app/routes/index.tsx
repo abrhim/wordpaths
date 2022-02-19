@@ -253,7 +253,7 @@ const ChallengeOfTheDay: FC<{
     <header className="path-details text-center">
       <h2 className="text-base">Today's Challenge</h2>
       <div className="inline-block margin-y-xs padding-xs bg-contrast-lower bg-opacity-40% radius-md text-xl text-uppercase font-bold letter-spacing-lg">
-        <span className="color-accent">{startWord.toUpperCase()}</span>
+        <span>{startWord.toUpperCase()}</span>
         <button
           style={{ borderStyle: "none", background: "none", color: "black" }}
           type="button"
@@ -263,7 +263,7 @@ const ChallengeOfTheDay: FC<{
             className="text-xl margin-left-xxs margin-right-xxs"
           />
         </button>
-        <span className="color-accent">{endWord.toUpperCase()}</span>
+        <span>{endWord.toUpperCase()}</span>
       </div>
     </header>
     <footer className="path-progress flex flex-row flex-center gap-md text-sm">
