@@ -41,7 +41,6 @@ export const NextWordInput: FC<NextWordInputProps> = ({
   };
 
   useEffect(() => {
-    console.log({ nextWord });
     onChange(nextWord.join(""));
   }, [nextWord]);
   useEffect(() => {
