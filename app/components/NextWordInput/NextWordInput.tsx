@@ -45,7 +45,7 @@ export const NextWordInput: FC<NextWordInputProps> = ({
 
   if (hidden) return null;
   return (
-    <>
+    <div className="path-entry path-entry--active flex gap-xs items-center text-center">
       {nextWord.map((char, index) => (
         <NextLetterInput
           key={index}
@@ -62,7 +62,7 @@ export const NextWordInput: FC<NextWordInputProps> = ({
           id={`${nextLetterIdBase}${index}`}
         />
       ))}
-    </>
+    </div>
   );
 };
 

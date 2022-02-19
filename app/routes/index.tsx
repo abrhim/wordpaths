@@ -129,17 +129,15 @@ export default function Index() {
                 endWord={endWord}
                 finished={finished}
               >
-                <div className="path-entry path-entry--active flex gap-xs items-center text-center">
-                  <NextWordInput
-                    hidden={finished}
-                    invalid={actionData?.errors?.nextWord}
-                    onChange={onNextWordChange}
-                    reset={actionData}
-                    placeHolder={
-                      path.length > 0 ? path[path.length - 1] : startWord
-                    }
-                  />
-                </div>
+                <NextWordInput
+                  hidden={finished}
+                  invalid={actionData?.errors?.nextWord}
+                  onChange={onNextWordChange}
+                  reset={actionData}
+                  placeHolder={
+                    path.length > 0 ? path[path.length - 1] : startWord
+                  }
+                />
               </PathTable>
               <ValidationMessage
                 error={actionData?.error}
@@ -155,21 +153,21 @@ export default function Index() {
               <h3 hidden={!finished}>Finished!</h3>
 
               <div className="container max-width-md padding-y-sm margin-top-sm">
-                <button
-                  className="btn btn--primary col-2 offset-4"
-                  type="submit"
-                  hidden={finished}
-                >
-                  {transition.state === "submitting"
-                    ? "Submitting... "
-                    : "Submit"}
-                  <FontAwesomeIcon
-                    className="text-sm margin-left-xxs"
-                    icon={faForwardStep}
-                  />
-
-                  {/* <i className="fa-solid fa-forward-step text-sm margin-left-xxs"></i> */}
-                </button>
+                {finished ? null : (
+                  <button
+                    className="btn btn--primary col-2 offset-4"
+                    type="submit"
+                    hidden={finished}
+                  >
+                    {transition.state === "submitting"
+                      ? "Submitting... "
+                      : "Submit"}
+                    <FontAwesomeIcon
+                      className="text-sm margin-left-xxs"
+                      icon={faForwardStep}
+                    />
+                  </button>
+                )}
                 <button
                   type="button"
                   className="btn col-2"
