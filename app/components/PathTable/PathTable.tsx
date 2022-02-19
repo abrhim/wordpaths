@@ -21,10 +21,14 @@ export const PathTable: FC<{
         </div>
 
         {path?.map((word) => (
-          <div className="path-entry path-entry--start flex gap-xs items-center text-center">
+          <div
+            key={Math.random()}
+            className="path-entry path-entry--start flex gap-xs items-center text-center"
+          >
             {word.split("").map((letter, letterIndex) => (
               <LetterBox
                 letter={letter}
+                key={`${letter}-${letterIndex}`}
                 correctLetter={
                   letter.toUpperCase() ===
                   endWord.split("")[letterIndex].toUpperCase()

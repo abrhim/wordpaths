@@ -9,6 +9,14 @@ import {
   Links,
   Scripts,
 } from "remix";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+  faArrowRight,
+  faForwardStep,
+  faRotateRight,
+  faRotateLeft,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 import type { GameState } from "~/utils/utils";
@@ -46,7 +54,7 @@ export const ErrorBoundary = ({ error }) => {
         <Links />
       </head>
       <body>
-        {/* add the UI you want your users to see */}
+        {error}
         <Scripts />
       </body>
     </html>
@@ -154,8 +162,13 @@ export default function Index() {
                 >
                   {transition.state === "submitting"
                     ? "Submitting... "
-                    : "Submit"}{" "}
-                  <i className="fa-solid fa-forward-step text-sm margin-left-xxs"></i>
+                    : "Submit"}
+                  <FontAwesomeIcon
+                    className="text-sm margin-left-xxs"
+                    icon={faForwardStep}
+                  />
+
+                  {/* <i className="fa-solid fa-forward-step text-sm margin-left-xxs"></i> */}
                 </button>
                 <button
                   type="button"
@@ -164,8 +177,11 @@ export default function Index() {
                     window.location.reload();
                   }}
                 >
-                  Reset{" "}
-                  <i className="fa-solid fa-rotate-right text-sm margin-left-xxs"></i>
+                  Reset
+                  <FontAwesomeIcon
+                    className="text-sm margin-left-xxs"
+                    icon={faRotateLeft}
+                  />
                 </button>
               </div>
             </fieldset>
@@ -240,7 +256,12 @@ const ChallengeOfTheDay: FC<{
       <h2 className="text-base">Today's Challenge</h2>
       <div className="inline-block margin-y-xs padding-xs bg-contrast-lower bg-opacity-40% radius-md text-xl text-uppercase font-bold letter-spacing-lg">
         <span className="color-accent">{startWord.toUpperCase()}</span>
-        <i className="fa-solid fa-arrow-right"></i>
+        <button style={{ borderStyle: "none" }} type="button">
+          <FontAwesomeIcon
+            icon={faArrowRight}
+            className="text-xl margin-left-xxs margin-right-xxs"
+          />
+        </button>
         <span className="color-accent">{endWord.toUpperCase()}</span>
       </div>
     </header>
