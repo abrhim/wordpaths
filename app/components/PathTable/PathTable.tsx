@@ -15,7 +15,9 @@ export const PathTable: FC<{
             <LetterBox
               key={`${letter}-${index}`}
               letter={letter}
-              correctLetter={false}
+              correctLetter={
+                letter.toUpperCase() === endWord.split("")[index].toUpperCase()
+              }
             />
           ))}
         </div>
