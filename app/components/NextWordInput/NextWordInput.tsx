@@ -33,12 +33,17 @@ export const NextWordInput: FC<NextWordInputProps> = ({
     index: number;
     char: string;
   }): void => {
-    const nextWordTemp = [...nextWord];
-    nextWordTemp[index] = char;
-    setNextWord(nextWordTemp);
+    setNextWord((previousWord) => {
+      const nextWordTemp = [...previousWord];
+      nextWordTemp[index] = char;
+      return nextWordTemp;
+    });
   };
 
-  useEffect(() => onChange(nextWord.join("")), [nextWord]);
+  useEffect(() => {
+    console.log({ nextWord });
+    onChange(nextWord.join(""));
+  }, [nextWord]);
   useEffect(() => {
     setFocusToNextCharacter(-1);
   }, [reset]);
@@ -97,7 +102,11 @@ const NextLetterInput: FC<NextLetterInputProps> = ({
   };
   useEffect(() => {
     onCharChange("");
+    // console.log(placeHolder);
   }, [placeHolder]);
+  useEffect(() => {
+    // console.log(char);
+  }, [char]);
   return (
     <input
       value={char}
@@ -122,7 +131,6 @@ const NextLetterInput: FC<NextLetterInputProps> = ({
       onChange={(e) => {
         if (letters.includes(e.target.value)) {
           onCharChange(e.target.value);
-
           setFocusToNextCharacter();
         }
       }}
