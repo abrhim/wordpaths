@@ -256,7 +256,10 @@ const ChallengeOfTheDay: FC<{
       <h2 className="text-base">Today's Challenge</h2>
       <div className="inline-block margin-y-xs padding-xs bg-contrast-lower bg-opacity-40% radius-md text-xl text-uppercase font-bold letter-spacing-lg">
         <span className="color-accent">{startWord.toUpperCase()}</span>
-        <button style={{ borderStyle: "none" }} type="button">
+        <button
+          style={{ borderStyle: "none", background: "none" }}
+          type="button"
+        >
           <FontAwesomeIcon
             icon={faArrowRight}
             className="text-xl margin-left-xxs margin-right-xxs"
