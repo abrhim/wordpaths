@@ -46,25 +46,22 @@ export const NextWordInput: FC<NextWordInputProps> = ({
   if (hidden) return null;
   return (
     <>
-      <tr>
-        {nextWord.map((char, index) => (
-          <td key={index}>
-            <NextLetterInput
-              hidden={hidden}
-              invalid={invalid}
-              placeHolder={placeHolder}
-              onChange={(changedChar) => {
-                wordChange({ index, char: changedChar });
-              }}
-              setFocusToNextCharacter={() => {
-                setFocusToNextCharacter(index);
-              }}
-              index={index}
-              id={`${nextLetterIdBase}${index}`}
-            />
-          </td>
-        ))}
-      </tr>
+      {nextWord.map((char, index) => (
+        <NextLetterInput
+          key={index}
+          hidden={hidden}
+          invalid={invalid}
+          placeHolder={placeHolder}
+          onChange={(changedChar) => {
+            wordChange({ index, char: changedChar });
+          }}
+          setFocusToNextCharacter={() => {
+            setFocusToNextCharacter(index);
+          }}
+          index={index}
+          id={`${nextLetterIdBase}${index}`}
+        />
+      ))}
     </>
   );
 };
@@ -108,7 +105,7 @@ const NextLetterInput: FC<NextLetterInputProps> = ({
       id={id}
       placeholder={placeHolder.split("")[index]}
       hidden={hidden}
-      className="LetterBox"
+      className="path-entry__letter path-entry__letter--input border radius-md padding-xs"
       type="text"
       style={{
         borderColor: invalid ? "red" : "",

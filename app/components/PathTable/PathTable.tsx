@@ -8,53 +8,47 @@ export const PathTable: FC<{
   finished: boolean;
 }> = ({ path, startWord, endWord, children, finished }) => {
   return (
-    <div className="PathTable">
-      <table>
-        <tbody>
-          <tr>
-            {startWord.split("").map((letter) => (
-              <td key={Math.random()}>
-                <LetterBox letter={letter} correctLetter={false} />
-              </td>
-            ))}
-          </tr>
+    <div className="path-list margin-top-md">
+      <div className="flex flex-column gap-xs items-center">
+        <div className="path-entry path-entry--start flex gap-xs items-center text-center">
+          {startWord.split("").map((letter, index) => (
+            <LetterBox
+              key={`${letter}-${index}`}
+              letter={letter}
+              correctLetter={false}
+            />
+          ))}
+        </div>
 
-          {path?.map((word) => {
-            const letters = word.split("");
-            return (
-              <tr key={Math.random()}>
-                {letters.map((letter, letterIndex) => (
-                  <td key={Math.random()}>
-                    <LetterBox
-                      letter={letter}
-                      correctLetter={
-                        letter.toUpperCase() ===
-                        endWord.split("")[letterIndex].toUpperCase()
-                      }
-                    />
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-          {children}
-          <tr>
-            {endWord.split("").map((letter, index) => (
-              <td key={Math.random()}>
-                <LetterBox
-                  letter={letter}
-                  correctLetter={
-                    path && path.length > 0
-                      ? path[path.length - 1].split("")[index].toUpperCase() ===
-                          letter.toUpperCase() || finished
-                      : false
-                  }
-                />
-              </td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
+        {path?.map((word) => (
+          <div className="path-entry path-entry--start flex gap-xs items-center text-center">
+            {word.split("").map((letter, letterIndex) => (
+              <LetterBox
+                letter={letter}
+                correctLetter={
+                  letter.toUpperCase() ===
+                  endWord.split("")[letterIndex].toUpperCase()
+                }
+              />
+            ))}{" "}
+          </div>
+        ))}
+        {children}
+        <div className="path-entry path-entry--last flex gap-xs items-center text-center">
+          {endWord.split("").map((letter, index) => (
+            <LetterBox
+              key={`${letter}-${index}`}
+              letter={letter}
+              correctLetter={
+                path && path.length > 0
+                  ? path[path.length - 1].split("")[index].toUpperCase() ===
+                      letter.toUpperCase() || finished
+                  : false
+              }
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
@@ -64,7 +58,11 @@ const LetterBox: FC<{
   correctLetter: boolean;
 }> = ({ letter, correctLetter }) => {
   return (
-    <span className={`LetterBox ${correctLetter ? "CorrectLetter" : ""}`}>
+    <span
+      className={`path-entry__letter border radius-md padding-xs ${
+        correctLetter ? "CorrectLetter" : ""
+      }`}
+    >
       {letter.toUpperCase()}
     </span>
   );

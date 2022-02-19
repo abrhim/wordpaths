@@ -5,11 +5,13 @@ import {
   Form,
   useTransition,
   useLoaderData,
+  Meta,
+  Links,
+  Scripts,
 } from "remix";
 
 import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 import type { GameState } from "~/utils/utils";
-import { Header } from "~/components/Header";
 import { PathTable } from "~/components/PathTable";
 import { NextWordInput } from "~/components/NextWordInput";
 
@@ -33,6 +35,23 @@ export const loader = async () => {
 };
 
 export const unstable_shouldReload = () => false;
+
+export const ErrorBoundary = ({ error }) => {
+  console.error(error);
+  return (
+    <html>
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {/* add the UI you want your users to see */}
+        <Scripts />
+      </body>
+    </html>
+  );
+};
 
 export default function Index() {
   // when the form is being processed on the server, this returns different
@@ -77,83 +96,100 @@ export default function Index() {
   const { endWord, startWord, shortestPath, path } = gamestate;
   return (
     <div className="">
-      <nav>
-        <Header />
-      </nav>
+      <header>
+        <div className="container text-center">
+          <h2 className="title">Wordpaths</h2>
+        </div>
+      </header>
       <main>
-        <ChallengeOfTheDay
-          startWord={startWord}
-          endWord={endWord}
-          shortestPathLength={shortestPath}
-          currentPathLength={path.length}
-        />
+        <div className="container max-width-sm padding-y-md">
+          <ChallengeOfTheDay
+            startWord={startWord}
+            endWord={endWord}
+            shortestPathLength={shortestPath}
+            currentPathLength={path.length}
+          />
 
-        <Form method="post" style={{ border: "none" }}>
-          <fieldset
-            style={{ border: "none" }}
-            disabled={transition.state === "submitting"}
-          >
-            <PathTable
-              path={path}
-              startWord={startWord}
-              endWord={endWord}
-              finished={finished}
+          <Form method="post" style={{ border: "none" }}>
+            <fieldset
+              style={{ border: "none" }}
+              disabled={transition.state === "submitting"}
             >
-              <NextWordInput
-                hidden={finished}
-                invalid={actionData?.errors?.nextWord}
-                onChange={onNextWordChange}
-                reset={actionData}
-                placeHolder={
-                  path.length > 0 ? path[path.length - 1] : startWord
-                }
+              <PathTable
+                path={path}
+                startWord={startWord}
+                endWord={endWord}
+                finished={finished}
+              >
+                <div className="path-entry path-entry--active flex gap-xs items-center text-center">
+                  <NextWordInput
+                    hidden={finished}
+                    invalid={actionData?.errors?.nextWord}
+                    onChange={onNextWordChange}
+                    reset={actionData}
+                    placeHolder={
+                      path.length > 0 ? path[path.length - 1] : startWord
+                    }
+                  />
+                </div>
+              </PathTable>
+              <ValidationMessage
+                error={actionData?.error}
+                isSubmitting={transition.state === "submitting"}
               />
-            </PathTable>
-            <ValidationMessage
-              error={actionData?.error}
-              isSubmitting={transition.state === "submitting"}
-            />
-            <input
-              type="hidden"
-              value={JSON.stringify(gamestate)}
-              name="gamestate"
-            />
-            <input type="hidden" value={nextWord} name="nextWord" />
+              <input
+                type="hidden"
+                value={JSON.stringify(gamestate)}
+                name="gamestate"
+              />
+              <input type="hidden" value={nextWord} name="nextWord" />
 
-            <h3 hidden={!finished}>Finished!</h3>
+              <h3 hidden={!finished}>Finished!</h3>
 
-            <button className="Button" type="submit" hidden={finished}>
-              {transition.state === "submitting" ? "Submitting..." : "Submit"}
-            </button>
-            <br />
-            <br />
-            <button
-              type="button"
-              className="Button"
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              Reset
-            </button>
-          </fieldset>
-        </Form>
-        <div>
-          <h3>Instructions: </h3>
-          <p>Welcome to Word Paths 👋</p>
-          <p>
-            The goal of the game is to find a path from the starting word to the
-            ending word. All words in the path must be 4 letters long, a word in
-            the scrabble dictionary, not the previous word, and only be one
-            letter different than the previous word.
-          </p>
-          <p>
-            If the starting word is <code>DONE</code> and the ending word is{" "}
-            <code>CONS</code>, a valid path would be <code>DONE</code> -{">"}{" "}
-            <code>CONE</code> -{">"} <code>CONS</code>.{" "}
-          </p>
+              <div className="container max-width-md padding-y-sm margin-top-sm">
+                <button
+                  className="btn btn--primary col-2 offset-4"
+                  type="submit"
+                  hidden={finished}
+                >
+                  {transition.state === "submitting"
+                    ? "Submitting... "
+                    : "Submit"}{" "}
+                  <i className="fa-solid fa-forward-step text-sm margin-left-xxs"></i>
+                </button>
+                <button
+                  type="button"
+                  className="btn col-2"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  Reset{" "}
+                  <i className="fa-solid fa-rotate-right text-sm margin-left-xxs"></i>
+                </button>
+              </div>
+            </fieldset>
+          </Form>
+        </div>
 
-          <p>Come back every day for a new challenge 😀 </p>
+        <div className="container max-width-sm padding-y-sm margin-top-sm">
+          <div className="text-component">
+            <h3 className="component__title">Instructions: </h3>
+            <p>Welcome to Word Paths 👋</p>
+            <p>
+              The goal of the game is to find a path from the starting word to
+              the ending word. All words in the path must be 4 letters long, a
+              word in the scrabble dictionary, not the previous word, and only
+              be one letter different than the previous word.
+            </p>
+            <p>
+              If the starting word is <code>DONE</code> and the ending word is{" "}
+              <code>CONS</code>, a valid path would be <code>DONE</code> -{">"}{" "}
+              <code>CONE</code> -{">"} <code>CONS</code>.{" "}
+            </p>
+
+            <p>Come back every day for a new challenge 😀 </p>
+          </div>
         </div>
       </main>
     </div>
@@ -199,13 +235,23 @@ const ChallengeOfTheDay: FC<{
   shortestPathLength: number;
   currentPathLength: number;
 }> = ({ startWord, endWord, shortestPathLength, currentPathLength }) => (
-  <div className="ChallengeOfTheDay">
-    <h2>
-      {startWord.toUpperCase()} ➡️ {endWord.toUpperCase()}
-    </h2>
-
-    {shortestPathLength ? <h3>Shortest path: {shortestPathLength} </h3> : null}
-
-    <h3>Your path: {currentPathLength ? currentPathLength : 0}</h3>
-  </div>
+  <>
+    <header className="path-details text-center">
+      <h2 className="text-base">Today's Challenge</h2>
+      <div className="inline-block margin-y-xs padding-xs bg-contrast-lower bg-opacity-40% radius-md text-xl text-uppercase font-bold letter-spacing-lg">
+        <span className="color-accent">{startWord.toUpperCase()}</span>
+        <i className="fa-solid fa-arrow-right"></i>
+        <span className="color-accent">{endWord.toUpperCase()}</span>
+      </div>
+    </header>
+    <footer className="path-progress flex flex-row flex-center gap-md text-sm">
+      <p>
+        Shortest Path: <b className="text-bold">{shortestPathLength}</b>
+      </p>
+      <p>
+        Your Path:{" "}
+        <b className="text-bold">{currentPathLength ? currentPathLength : 0}</b>
+      </p>
+    </footer>
+  </>
 );

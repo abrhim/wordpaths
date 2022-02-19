@@ -11,6 +11,8 @@ import {
 } from "remix";
 import type { MetaFunction } from "remix";
 import globalStyles from "./styles/global.css";
+import codyhouseStyles from "./styles/codyhouse.css";
+import fontAwesomeStyles from "./styles/fontawesome.css";
 
 export const meta: MetaFunction = () => {
   return { title: "Wordpaths!" };
@@ -18,6 +20,11 @@ export const meta: MetaFunction = () => {
 
 export const links: LinksFunction = () => [
   { href: globalStyles, rel: "stylesheet" },
+  { href: codyhouseStyles, rel: "stylesheet" },
+  {
+    href: fontAwesomeStyles,
+    rel: "stylesheet",
+  },
 ];
 
 export default function App() {
