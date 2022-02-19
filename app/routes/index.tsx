@@ -257,7 +257,7 @@ const ChallengeOfTheDay: FC<{
       <div className="inline-block margin-y-xs padding-xs bg-contrast-lower bg-opacity-40% radius-md text-xl text-uppercase font-bold letter-spacing-lg">
         <span className="color-accent">{startWord.toUpperCase()}</span>
         <button
-          style={{ borderStyle: "none", background: "none" }}
+          style={{ borderStyle: "none", background: "none", color: "black" }}
           type="button"
         >
           <FontAwesomeIcon
