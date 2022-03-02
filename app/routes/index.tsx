@@ -181,29 +181,43 @@ export default function Index() {
                         <b className="text-bold">{path.length + 1}</b>
                       </p>
                     </footer>
-                    <button
-                      type="button"
-                      className={`btn col-2 margin-sm ${
-                        copying ? "btn--disabled" : "btn--primary"
-                      }`}
-                      disabled={copying}
-                      onClick={() => {
-                        copyShareString(
-                          path,
-                          endWord,
-                          startWord,
-                          gamestate.distance,
-                          shortestPath
-                        );
-                        setCopying(true);
-                      }}
-                    >
-                      {copying ? "Copied!" : "Share"}
-                    </button>
                   </>
                 ) : null}
 
-                {finished ? null : (
+                <button
+                  type="button"
+                  className="btn col-2"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  Reset
+                  <FontAwesomeIcon
+                    className="text-sm margin-left-xxs"
+                    icon={faRotateLeft}
+                  />
+                </button>
+                {finished ? (
+                  <button
+                    type="button"
+                    className={`btn col-2 margin-sm ${
+                      copying ? "btn--disabled" : "btn--primary"
+                    }`}
+                    disabled={copying}
+                    onClick={() => {
+                      copyShareString(
+                        path,
+                        endWord,
+                        startWord,
+                        gamestate.distance,
+                        shortestPath
+                      );
+                      setCopying(true);
+                    }}
+                  >
+                    {copying ? "Copied!" : "Share"}
+                  </button>
+                ) : (
                   <button
                     className="btn btn--primary col-2 offset-4 margin-sm	"
                     type="submit"
@@ -218,19 +232,6 @@ export default function Index() {
                     />
                   </button>
                 )}
-                <button
-                  type="button"
-                  className="btn col-2"
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                >
-                  Reset
-                  <FontAwesomeIcon
-                    className="text-sm margin-left-xxs"
-                    icon={faRotateLeft}
-                  />
-                </button>
               </div>
             </fieldset>
           </Form>

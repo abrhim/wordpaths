@@ -28,15 +28,6 @@ export const PathTable: FC<{
             key={Math.random()}
             className="path-entry path-entry--start flex gap-xs items-center text-center"
           >
-            {index === path.length - 1 && !finished ? (
-              <button
-                type="button"
-                onClick={popPath}
-                className="btn btn--xs btn--accent "
-              >
-                X
-              </button>
-            ) : null}
             {word.split("").map((letter, letterIndex) => (
               <LetterBox
                 letter={letter}
@@ -46,7 +37,16 @@ export const PathTable: FC<{
                   endWord.split("")[letterIndex].toUpperCase()
                 }
               />
-            ))}{" "}
+            ))}
+            {index === path.length - 1 && !finished ? (
+              <button
+                type="button"
+                onClick={popPath}
+                className="btn btn--xs btn--primary "
+              >
+                X
+              </button>
+            ) : null}
           </div>
         ))}
         {children}
