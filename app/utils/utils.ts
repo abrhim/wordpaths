@@ -47,6 +47,7 @@ export type GameState = {
   startWord: string;
   endWord: string;
   shortestPath: number;
+  distance: number;
 };
 export const evaluateGameState = (gamestate: GameState): GameStateResponse => {
   const { nextWord, path, startWord, endWord } = gamestate;
@@ -152,15 +153,20 @@ const isNextWordValid = ({
 };
 
 export const getDailyChallenge = async (): Promise<
-  | { startWord: string; endWord: string; shortestPath: number | undefined }
+  | {
+      startWord: string;
+      endWord: string;
+      shortestPath: number | undefined;
+      distance: number;
+    }
   | { error: string }
 > => {
   const docRef = doc(firestore, "daily-challenges", todaysDate);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    const { startWord, endWord, shortestPath } = docSnap.data();
-    return { startWord, endWord, shortestPath };
+    const { startWord, endWord, shortestPath, distance } = docSnap.data();
+    return { startWord, endWord, shortestPath, distance };
   } else {
     return { error: "Error accessing today's challenge." };
   }

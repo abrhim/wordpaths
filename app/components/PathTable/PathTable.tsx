@@ -6,7 +6,8 @@ export const PathTable: FC<{
   startWord: string;
   endWord: string;
   finished: boolean;
-}> = ({ path, startWord, endWord, children, finished }) => {
+  popPath: () => void;
+}> = ({ path, startWord, endWord, children, finished, popPath }) => {
   return (
     <div className="path-list margin-top-md">
       <div className="flex flex-column gap-xs items-center">
@@ -22,11 +23,20 @@ export const PathTable: FC<{
           ))}
         </div>
 
-        {path?.map((word) => (
+        {path?.map((word, index) => (
           <div
             key={Math.random()}
             className="path-entry path-entry--start flex gap-xs items-center text-center"
           >
+            {index === path.length - 1 && !finished ? (
+              <button
+                type="button"
+                onClick={popPath}
+                className="btn btn--xs btn--accent "
+              >
+                X
+              </button>
+            ) : null}
             {word.split("").map((letter, letterIndex) => (
               <LetterBox
                 letter={letter}

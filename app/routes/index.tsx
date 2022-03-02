@@ -75,7 +75,11 @@ export default function Index() {
     path: [],
   });
   const [finished, setFinished] = useState<boolean>(false);
+  const [copying, setCopying] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (copying) setTimeout(() => setCopying(!copying), 3000);
+  }, [copying]);
   useEffect(() => {
     if (actionData?.valid) {
       if (actionData.finished) setFinished(true);
@@ -85,7 +89,7 @@ export default function Index() {
           path: actionData.path,
         }));
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     }
   }, [actionData]);
@@ -117,7 +121,7 @@ export default function Index() {
             startWord={startWord}
             endWord={endWord}
             shortestPathLength={shortestPath}
-            currentPathLength={path.length}
+            shortestCalculatedPathLength={gamestate.distance}
           />
 
           <Form method="post" style={{ border: "none" }}>
@@ -130,6 +134,12 @@ export default function Index() {
                 startWord={startWord}
                 endWord={endWord}
                 finished={finished}
+                popPath={() =>
+                  setGamestate({
+                    ...gamestate,
+                    path: gamestate.path.slice(0, gamestate.path.length - 1),
+                  })
+                }
               >
                 <NextWordInput
                   hidden={finished}
@@ -152,28 +162,47 @@ export default function Index() {
               />
               <input type="hidden" value={nextWord} name="nextWord" />
 
-              <h3 hidden={!finished}>Finished!</h3>
-              {finished ? (
-                <>
-                  <button
-                    type="button"
-                    className="btn col-2 margin-sm btn--primary"
-                    onClick={() => copyShareString(path, endWord, startWord)}
-                  >
-                    Share
-                  </button>
-                  <footer className="path-progress flex flex-row flex-center gap-md text-sm">
-                    <p>
-                      Shortest Path: <b className="text-bold">{shortestPath}</b>
-                    </p>
-                    <p>
-                      Your Path: <b className="text-bold">{path.length + 1}</b>
-                    </p>
-                  </footer>
-                </>
-              ) : null}
-
               <div className="container max-width-md padding-y-sm margin-top-sm">
+                {finished ? (
+                  <>
+                    <h3>Finished!</h3>
+                    <br />
+                    <footer className="path-progress flex flex-row flex-center gap-md text-sm">
+                      <p>
+                        Shortest Possible Path:{" "}
+                        <b className="text-bold">{gamestate.distance}</b>
+                      </p>
+                      <p>
+                        Shortest Found Path:{" "}
+                        <b className="text-bold">{shortestPath}</b>
+                      </p>
+                      <p>
+                        Your Path:{" "}
+                        <b className="text-bold">{path.length + 1}</b>
+                      </p>
+                    </footer>
+                    <button
+                      type="button"
+                      className={`btn col-2 margin-sm ${
+                        copying ? "btn--disabled" : "btn--primary"
+                      }`}
+                      disabled={copying}
+                      onClick={() => {
+                        copyShareString(
+                          path,
+                          endWord,
+                          startWord,
+                          gamestate.distance,
+                          shortestPath
+                        );
+                        setCopying(true);
+                      }}
+                    >
+                      {copying ? "Copied!" : "Share"}
+                    </button>
+                  </>
+                ) : null}
+
                 {finished ? null : (
                   <button
                     className="btn btn--primary col-2 offset-4 margin-sm	"
@@ -235,8 +264,13 @@ const ChallengeOfTheDay: FC<{
   startWord: string;
   endWord: string;
   shortestPathLength: number;
-  currentPathLength: number;
-}> = ({ startWord, endWord, shortestPathLength, currentPathLength }) => (
+  shortestCalculatedPathLength: number;
+}> = ({
+  startWord,
+  endWord,
+  shortestPathLength,
+  shortestCalculatedPathLength,
+}) => (
   <>
     <header className="path-details text-center">
       <h2 className="text-base">Today's Challenge</h2>
@@ -256,13 +290,11 @@ const ChallengeOfTheDay: FC<{
     </header>
     <footer className="path-progress flex flex-row flex-center gap-md text-sm">
       <p>
-        Shortest Path: <b className="text-bold">{shortestPathLength}</b>
+        Shortest Possible Path:{" "}
+        <b className="text-bold">{shortestCalculatedPathLength} </b>
       </p>
       <p>
-        Your Path:{" "}
-        <b className="text-bold">
-          {currentPathLength ? currentPathLength + 1 : 0}
-        </b>
+        Shortest Found Path: <b className="text-bold">{shortestPathLength}</b>
       </p>
     </footer>
   </>
