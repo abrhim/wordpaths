@@ -115,10 +115,6 @@ const NextLetterInput: FC<NextLetterInputProps> = ({
       hidden={hidden}
       className="path-entry__letter path-entry__letter--input border radius-md padding-xs"
       type="text"
-      style={{
-        borderColor: invalid ? "red" : "",
-        textTransform: "uppercase",
-      }}
       maxLength={1}
       onKeyDown={(e) => {
         if (char && letters.includes(e.key)) {

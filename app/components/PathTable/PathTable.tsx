@@ -65,7 +65,7 @@ const LetterBox: FC<{
 }> = ({ letter, correctLetter }) => {
   return (
     <span
-      className={`path-entry__letter border radius-md padding-xs ${
+      className={`path-entry__letter border radius-md padding-xs  ${
         correctLetter ? "CorrectLetter" : ""
       }`}
     >

@@ -22,6 +22,8 @@ import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 import type { GameState } from "~/utils/utils";
 import { PathTable } from "~/components/PathTable";
 import { NextWordInput } from "~/components/NextWordInput";
+import { copyShareString } from "~/utils/share";
+import { ValidationMessage } from "~/components/ValidationMessage";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -151,11 +153,30 @@ export default function Index() {
               <input type="hidden" value={nextWord} name="nextWord" />
 
               <h3 hidden={!finished}>Finished!</h3>
+              {finished ? (
+                <>
+                  <button
+                    type="button"
+                    className="btn col-2 margin-sm btn--primary"
+                    onClick={() => copyShareString(path, endWord, startWord)}
+                  >
+                    Share
+                  </button>
+                  <footer className="path-progress flex flex-row flex-center gap-md text-sm">
+                    <p>
+                      Shortest Path: <b className="text-bold">{shortestPath}</b>
+                    </p>
+                    <p>
+                      Your Path: <b className="text-bold">{path.length + 1}</b>
+                    </p>
+                  </footer>
+                </>
+              ) : null}
 
               <div className="container max-width-md padding-y-sm margin-top-sm">
                 {finished ? null : (
                   <button
-                    className="btn btn--primary col-2 offset-4"
+                    className="btn btn--primary col-2 offset-4 margin-sm	"
                     type="submit"
                     hidden={finished}
                   >
@@ -210,39 +231,6 @@ export default function Index() {
   );
 }
 
-function ValidationMessage({
-  error,
-  isSubmitting,
-}: {
-  error: string;
-  isSubmitting: boolean;
-}) {
-  const [show, setShow] = useState(!!error);
-
-  useEffect(() => {
-    const id = setTimeout(() => {
-      const hasError = !!error;
-      setShow(hasError && !isSubmitting);
-    });
-    return () => clearTimeout(id);
-  }, [error, isSubmitting]);
-
-  return (
-    <div
-      style={{
-        opacity: show ? 1 : 0,
-        height: show ? "1em" : 0,
-        color: "red",
-        transition: "all 300ms ease-in-out",
-        wordBreak: "break-word",
-        margin: "40px",
-      }}
-    >
-      {error}
-    </div>
-  );
-}
-
 const ChallengeOfTheDay: FC<{
   startWord: string;
   endWord: string;
@@ -272,7 +260,9 @@ const ChallengeOfTheDay: FC<{
       </p>
       <p>
         Your Path:{" "}
-        <b className="text-bold">{currentPathLength ? currentPathLength : 0}</b>
+        <b className="text-bold">
+          {currentPathLength ? currentPathLength + 1 : 0}
+        </b>
       </p>
     </footer>
   </>
