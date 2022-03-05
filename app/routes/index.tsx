@@ -16,6 +16,7 @@ import {
   faForwardStep,
   faRotateRight,
   faRotateLeft,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
@@ -78,8 +79,9 @@ export default function Index() {
   const [copying, setCopying] = useState<boolean>(false);
 
   useEffect(() => {
-    if (copying) setTimeout(() => setCopying(!copying), 3000);
+    if (copying) setTimeout(() => setCopying(!copying), 2000);
   }, [copying]);
+
   useEffect(() => {
     if (actionData?.valid) {
       if (actionData.finished) setFinished(true);
@@ -215,7 +217,7 @@ export default function Index() {
                       setCopying(true);
                     }}
                   >
-                    {copying ? "Copied!" : "Share"}
+                    {copying ? "Copied score!" : "Share score"}
                   </button>
                 ) : (
                   <button
