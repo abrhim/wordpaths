@@ -14,7 +14,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faForwardStep,
-  faRotateRight,
   faRotateLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -22,6 +21,8 @@ import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
 import type { GameState } from "~/utils/utils";
 import { PathTable } from "~/components/PathTable";
 import { NextWordInput } from "~/components/NextWordInput";
+import { copyShareString } from "~/utils/share";
+import { ValidationMessage } from "~/components/ValidationMessage";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -73,6 +74,11 @@ export default function Index() {
     path: [],
   });
   const [finished, setFinished] = useState<boolean>(false);
+  const [copying, setCopying] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (copying) setTimeout(() => setCopying(!copying), 2000);
+  }, [copying]);
 
   useEffect(() => {
     if (actionData?.valid) {
@@ -83,7 +89,7 @@ export default function Index() {
           path: actionData.path,
         }));
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     }
   }, [actionData]);
@@ -115,7 +121,7 @@ export default function Index() {
             startWord={startWord}
             endWord={endWord}
             shortestPathLength={shortestPath}
-            currentPathLength={path.length}
+            shortestCalculatedPathLength={gamestate.distance}
           />
 
           <Form method="post" style={{ border: "none" }}>
@@ -128,6 +134,12 @@ export default function Index() {
                 startWord={startWord}
                 endWord={endWord}
                 finished={finished}
+                popPath={() =>
+                  setGamestate({
+                    ...gamestate,
+                    path: gamestate.path.slice(0, gamestate.path.length - 1),
+                  })
+                }
               >
                 <NextWordInput
                   hidden={finished}
@@ -150,24 +162,28 @@ export default function Index() {
               />
               <input type="hidden" value={nextWord} name="nextWord" />
 
-              <h3 hidden={!finished}>Finished!</h3>
-
               <div className="container max-width-md padding-y-sm margin-top-sm">
-                {finished ? null : (
-                  <button
-                    className="btn btn--primary col-2 offset-4"
-                    type="submit"
-                    hidden={finished}
-                  >
-                    {transition.state === "submitting"
-                      ? "Submitting... "
-                      : "Submit"}
-                    <FontAwesomeIcon
-                      className="text-sm margin-left-xxs"
-                      icon={faForwardStep}
-                    />
-                  </button>
-                )}
+                {finished ? (
+                  <>
+                    <h3>Finished!</h3>
+                    <br />
+                    <footer className="path-progress flex flex-row flex-center gap-md text-sm">
+                      <p>
+                        Shortest Possible Path:{" "}
+                        <b className="text-bold">{gamestate.distance}</b>
+                      </p>
+                      <p>
+                        Shortest Found Path:{" "}
+                        <b className="text-bold">{shortestPath}</b>
+                      </p>
+                      <p>
+                        Your Path:{" "}
+                        <b className="text-bold">{path.length + 1}</b>
+                      </p>
+                    </footer>
+                  </>
+                ) : null}
+
                 <button
                   type="button"
                   className="btn col-2"
@@ -181,6 +197,41 @@ export default function Index() {
                     icon={faRotateLeft}
                   />
                 </button>
+                {finished ? (
+                  <button
+                    type="button"
+                    className={`btn col-2 margin-sm ${
+                      copying ? "btn--disabled" : "btn--primary"
+                    }`}
+                    disabled={copying}
+                    onClick={() => {
+                      copyShareString(
+                        path,
+                        endWord,
+                        startWord,
+                        gamestate.distance,
+                        shortestPath
+                      );
+                      setCopying(true);
+                    }}
+                  >
+                    {copying ? "Copied score!" : "Share score"}
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn--primary col-2 offset-4 margin-sm	"
+                    type="submit"
+                    hidden={finished}
+                  >
+                    {transition.state === "submitting"
+                      ? "Submitting... "
+                      : "Submit"}
+                    <FontAwesomeIcon
+                      className="text-sm margin-left-xxs"
+                      icon={faForwardStep}
+                    />
+                  </button>
+                )}
               </div>
             </fieldset>
           </Form>
@@ -210,45 +261,17 @@ export default function Index() {
   );
 }
 
-function ValidationMessage({
-  error,
-  isSubmitting,
-}: {
-  error: string;
-  isSubmitting: boolean;
-}) {
-  const [show, setShow] = useState(!!error);
-
-  useEffect(() => {
-    const id = setTimeout(() => {
-      const hasError = !!error;
-      setShow(hasError && !isSubmitting);
-    });
-    return () => clearTimeout(id);
-  }, [error, isSubmitting]);
-
-  return (
-    <div
-      style={{
-        opacity: show ? 1 : 0,
-        height: show ? "1em" : 0,
-        color: "red",
-        transition: "all 300ms ease-in-out",
-        wordBreak: "break-word",
-        margin: "40px",
-      }}
-    >
-      {error}
-    </div>
-  );
-}
-
 const ChallengeOfTheDay: FC<{
   startWord: string;
   endWord: string;
   shortestPathLength: number;
-  currentPathLength: number;
-}> = ({ startWord, endWord, shortestPathLength, currentPathLength }) => (
+  shortestCalculatedPathLength: number;
+}> = ({
+  startWord,
+  endWord,
+  shortestPathLength,
+  shortestCalculatedPathLength,
+}) => (
   <>
     <header className="path-details text-center">
       <h2 className="text-base">Today's Challenge</h2>
@@ -268,11 +291,11 @@ const ChallengeOfTheDay: FC<{
     </header>
     <footer className="path-progress flex flex-row flex-center gap-md text-sm">
       <p>
-        Shortest Path: <b className="text-bold">{shortestPathLength}</b>
+        Shortest Possible Path:{" "}
+        <b className="text-bold">{shortestCalculatedPathLength} </b>
       </p>
       <p>
-        Your Path:{" "}
-        <b className="text-bold">{currentPathLength ? currentPathLength : 0}</b>
+        Shortest Found Path: <b className="text-bold">{shortestPathLength}</b>
       </p>
     </footer>
   </>

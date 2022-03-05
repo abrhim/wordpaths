@@ -2,7 +2,13 @@ import wordsWith4letters from "./wordsWith4Letters.json";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -41,6 +47,7 @@ export type GameState = {
   startWord: string;
   endWord: string;
   shortestPath: number;
+  distance: number;
 };
 export const evaluateGameState = (gamestate: GameState): GameStateResponse => {
   const { nextWord, path, startWord, endWord } = gamestate;
@@ -64,9 +71,7 @@ export const evaluateGameState = (gamestate: GameState): GameStateResponse => {
     if (path.length < gamestate.shortestPath || !gamestate.shortestPath) {
       const docRef = doc(firestore, "daily-challenges", todaysDate);
 
-      updateDoc(docRef, { shortestPath: path.length }).then((value) =>
-        console.log(value)
-      );
+      updateDoc(docRef, { shortestPath: path.length + 1 });
     }
     return {
       ...gamestate,
@@ -148,16 +153,95 @@ const isNextWordValid = ({
 };
 
 export const getDailyChallenge = async (): Promise<
-  | { startWord: string; endWord: string; shortestPath: number | undefined }
+  | {
+      startWord: string;
+      endWord: string;
+      shortestPath: number | undefined;
+      distance: number;
+    }
   | { error: string }
 > => {
   const docRef = doc(firestore, "daily-challenges", todaysDate);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    const { startWord, endWord, shortestPath } = docSnap.data();
-    return { startWord, endWord, shortestPath };
+    const { startWord, endWord, shortestPath, distance } = docSnap.data();
+    return { startWord, endWord, shortestPath, distance };
   } else {
     return { error: "Error accessing today's challenge." };
   }
+};
+
+type ScrabbleDictionary = {
+  [key: string]: {
+    siblings: string[];
+  };
+};
+
+export const findShortestPath = (
+  graph: ScrabbleDictionary,
+  startNode: string
+): NodeDistanceMap => {
+  const nodes = Object.keys(graph);
+  const startNodeDistanceMap = initializeStartNodeDistanceMap(nodes, startNode);
+  while (nodes.length > 0) {
+    nodes.sort((node1, node2) => {
+      return (
+        startNodeDistanceMap[node2].distance -
+        startNodeDistanceMap[node1].distance
+      );
+    });
+    const nodeWithShortestPath = nodes.pop();
+    if (nodeWithShortestPath) {
+      const currentDistance =
+        startNodeDistanceMap[nodeWithShortestPath].distance + 1;
+      const currentPath = [
+        ...startNodeDistanceMap[nodeWithShortestPath].path,
+        nodeWithShortestPath,
+      ];
+      graph[nodeWithShortestPath].siblings?.forEach((sibling) => {
+        if (startNodeDistanceMap[sibling].distance > currentDistance) {
+          startNodeDistanceMap[sibling].distance = currentDistance;
+          startNodeDistanceMap[sibling].path = currentPath;
+        }
+      });
+    }
+  }
+  return startNodeDistanceMap;
+};
+
+type NodeDistanceMap = {
+  [key: string]: { distance: number; path: string[] };
+};
+
+const initializeStartNodeDistanceMap = (
+  nodes: string[],
+  startNode: string
+): NodeDistanceMap => {
+  const map: NodeDistanceMap = {};
+  nodes.forEach(
+    (node: string) =>
+      (map[node] =
+        node !== startNode
+          ? { distance: Infinity, path: [] }
+          : { distance: 0, path: [] })
+  );
+  return map;
+};
+
+type DailyChallenge = {
+  endWord: string;
+  startWord: string;
+  date: string;
+  distance: number;
+  shortestFoundDistance?: number;
+  submissions?: number;
+  uniqueImpressions?: number;
+};
+
+export const createDailyChallenge = (dailyChallenge: DailyChallenge) => {
+  return setDoc(
+    doc(firestore, "daily-challenges", dailyChallenge.date),
+    dailyChallenge
+  );
 };

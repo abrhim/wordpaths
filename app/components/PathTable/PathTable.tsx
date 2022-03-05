@@ -1,4 +1,7 @@
 import type { FC } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../../styles/global.css";
 
 export const PathTable: FC<{
@@ -6,11 +9,12 @@ export const PathTable: FC<{
   startWord: string;
   endWord: string;
   finished: boolean;
-}> = ({ path, startWord, endWord, children, finished }) => {
+  popPath: () => void;
+}> = ({ path, startWord, endWord, children, finished, popPath }) => {
   return (
     <div className="path-list margin-top-md">
       <div className="flex flex-column gap-xs items-center">
-        <div className="path-entry path-entry--start flex gap-xs items-center text-center">
+        <div className="path-entry path-entry__start flex gap-xs items-center text-center">
           {startWord.split("").map((letter, index) => (
             <LetterBox
               key={`${letter}-${index}`}
@@ -22,25 +26,39 @@ export const PathTable: FC<{
           ))}
         </div>
 
-        {path?.map((word) => (
-          <div
-            key={Math.random()}
-            className="path-entry path-entry--start flex gap-xs items-center text-center"
-          >
-            {word.split("").map((letter, letterIndex) => (
-              <LetterBox
-                letter={letter}
-                key={`${letter}-${letterIndex}`}
-                correctLetter={
-                  letter.toUpperCase() ===
-                  endWord.split("")[letterIndex].toUpperCase()
-                }
-              />
-            ))}{" "}
-          </div>
+        {path?.map((word, index) => (
+          <>
+            <div
+              key={Math.random()}
+              className="path-entry path-entry--start flex gap-xs items-center text-center position-relative"
+            >
+              {word.split("").map((letter, letterIndex) => (
+                <LetterBox
+                  letter={letter}
+                  key={`${letter}-${letterIndex}`}
+                  correctLetter={
+                    letter.toUpperCase() ===
+                    endWord.split("")[letterIndex].toUpperCase()
+                  }
+                />
+              ))}
+              {index === path.length - 1 && !finished ? (
+                <button
+                  type="button"
+                  onClick={popPath}
+                  className="btn btn--primary position-absolute pop-path"
+                >
+                  <FontAwesomeIcon
+                    className="text-sm margin-xxxs"
+                    icon={faTrash}
+                  />
+                </button>
+              ) : null}
+            </div>
+          </>
         ))}
         {children}
-        <div className="path-entry path-entry--last flex gap-xs items-center text-center">
+        <div className="path-entry path-entry__last flex gap-xs items-center text-center">
           {endWord.split("").map((letter, index) => (
             <LetterBox
               key={`${letter}-${index}`}
@@ -65,7 +83,7 @@ const LetterBox: FC<{
 }> = ({ letter, correctLetter }) => {
   return (
     <span
-      className={`path-entry__letter border radius-md padding-xs ${
+      className={`path-entry__letter border radius-md padding-xs  ${
         correctLetter ? "CorrectLetter" : ""
       }`}
     >
