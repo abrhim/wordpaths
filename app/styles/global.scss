@@ -9,8 +9,6 @@
   --gapWidth: calc(var(--space-xs) * 4);
   --wordWidth: calc(64px * 4);
   left: calc(var(--gapWidth) + var(--wordWidth));
-  // width: 64px;
-  // height: 64px;
   width: 4rem;
   height: 4rem;
 }
