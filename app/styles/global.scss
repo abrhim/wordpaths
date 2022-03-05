@@ -5,6 +5,25 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.pop-path {
+  --gapWidth: calc(var(--space-xs) * 4);
+  --wordWidth: calc(64px * 4);
+  left: calc(var(--gapWidth) + var(--wordWidth));
+  // width: 64px;
+  // height: 64px;
+  width: 4rem;
+  height: 4rem;
+}
+
+.path-entry__last > .path-entry__letter {
+  border-width: 2px;
+  border-color: hsl(0, 0%, 56%);
+}
+.path-entry__start > .path-entry__letter {
+  border-width: 2px;
+  border-color: hsl(0, 0%, 56%);
+}
+
 .path-entry__letter {
   width: 4rem;
   height: 4rem;

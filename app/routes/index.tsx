@@ -14,9 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faForwardStep,
-  faRotateRight,
   faRotateLeft,
-  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { evaluateGameState, getDailyChallenge } from "~/utils/utils";
