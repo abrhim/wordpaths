@@ -291,11 +291,14 @@ const ChallengeOfTheDay: FC<{
     </header>
     <footer className="path-progress flex flex-row flex-center gap-md text-sm">
       <p>
-        Shortest Possible Path:{" "}
+        Shortest Calculated Path:{" "}
         <b className="text-bold">{shortestCalculatedPathLength} </b>
       </p>
       <p>
-        Shortest Found Path: <b className="text-bold">{shortestPathLength}</b>
+        Shortest Found Path:{" "}
+        <b className="text-bold">
+          {shortestPathLength ? shortestPathLength : "--"}
+        </b>
       </p>
     </footer>
   </>
