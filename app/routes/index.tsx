@@ -146,7 +146,7 @@ export default function Index() {
                   invalid={actionData?.errors?.nextWord}
                   onChange={onNextWordChange}
                   reset={actionData}
-                  placeHolder={
+                  placeholder={
                     path.length > 0 ? path[path.length - 1] : startWord
                   }
                 />

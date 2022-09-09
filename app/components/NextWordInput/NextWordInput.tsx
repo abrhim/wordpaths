@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef, ElementRef, LegacyRef } from "react";
+import { FC, useState, useEffect } from "react";
 import "../../styles/global.css";
 
 const nextLetterIdBase = "NextLetterId-";
@@ -8,16 +8,15 @@ type NextWordInputProps = {
   hidden: boolean;
   invalid: boolean;
   reset: any;
-  placeHolder: string;
+  placeholder: string;
 };
 
-const initState = ["", "", "", ""];
 export const NextWordInput: FC<NextWordInputProps> = ({
   onChange,
   hidden,
   invalid,
   reset,
-  placeHolder,
+  placeholder,
 }) => {
   const [nextWord, setNextWord] = useState<string[]>(["", "", "", ""]);
 
@@ -43,6 +42,7 @@ export const NextWordInput: FC<NextWordInputProps> = ({
   useEffect(() => {
     onChange(nextWord.join(""));
   }, [nextWord]);
+
   useEffect(() => {
     setFocusToNextCharacter(-1);
   }, [reset]);
@@ -55,12 +55,15 @@ export const NextWordInput: FC<NextWordInputProps> = ({
           key={index}
           hidden={hidden}
           invalid={invalid}
-          placeHolder={placeHolder}
+          placeholder={placeholder.split("")[index]}
           onChange={(changedChar) => {
             wordChange({ index, char: changedChar });
           }}
           setFocusToNextCharacter={() => {
             setFocusToNextCharacter(index);
+          }}
+          setFocusToPreviousCharacter={() => {
+            setFocusToNextCharacter(index - 2);
           }}
           index={index}
           id={`${nextLetterIdBase}${index}`}
@@ -80,53 +83,59 @@ type NextLetterInputProps = {
   invalid: boolean;
   index: number;
   id: string;
-  placeHolder: string;
+  placeholder: string;
   onChange: (character: string) => void;
   setFocusToNextCharacter: () => void;
+  setFocusToPreviousCharacter: () => void;
 };
 
 const NextLetterInput: FC<NextLetterInputProps> = ({
   hidden,
-  invalid,
   onChange,
   setFocusToNextCharacter,
+  setFocusToPreviousCharacter,
   index,
   id,
-  placeHolder,
+  placeholder,
 }) => {
-  const [char, setChar] = useState<string>("");
+  const [char, setChar] = useState<string>(placeholder);
+
   const onCharChange = (value: string) => {
     setChar(value);
     onChange(value);
   };
-  useEffect(() => {
-    onCharChange("");
-    // console.log(placeHolder);
-  }, [placeHolder]);
-  useEffect(() => {
-    // console.log(char);
-  }, [char]);
+
   return (
     <input
       value={char}
+      onFocus={() => onCharChange("")}
       autoFocus={index === 0}
       id={id}
-      placeholder={placeHolder.split("")[index]}
+      placeholder={placeholder}
       hidden={hidden}
       className="path-entry__letter path-entry__letter--input border radius-md padding-xs"
       type="text"
       maxLength={1}
+      onBlur={(e) => {
+        if (!char) onCharChange(placeholder);
+      }}
       onKeyDown={(e) => {
         if (char && letters.includes(e.key)) {
           onCharChange(e.key);
-        } else if (char && (e.key === "Backspace" || e.key === "Delete")) {
+        }
+        if (char && (e.key === "Backspace" || e.key === "Delete")) {
           onCharChange("");
+        }
+        if (e.key === "ArrowRight") {
+          setFocusToNextCharacter();
+        }
+        if (e.key === "ArrowLeft") {
+          setFocusToPreviousCharacter();
         }
       }}
       onChange={(e) => {
         if (letters.includes(e.target.value)) {
           onCharChange(e.target.value);
-          setFocusToNextCharacter();
         }
       }}
     />
