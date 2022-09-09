@@ -105,10 +105,14 @@ const NextLetterInput: FC<NextLetterInputProps> = ({
     onChange(value);
   };
 
+  useEffect(() => {
+    onCharChange(placeholder);
+  }, [placeholder]);
+
   return (
     <input
       value={char}
-      onFocus={() => onCharChange("")}
+      onFocus={() => setChar("")}
       autoFocus={index === 0}
       id={id}
       placeholder={placeholder}
